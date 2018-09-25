@@ -1,0 +1,53 @@
+func test(int i, int j){
+	printn(i); putchar(0xa);
+	printn(j);
+}
+
+int v = {-4, 0x42345678, -955359, 327680};
+int coisa = -123456;
+char str = "abcdef";
+
+func main() {
+	char vb = "abcde";
+	char buf[50];
+	int a, b, c;
+	int d = {4, 5, 6, 7, 8};
+	int e = 2000;
+
+	putchar('a');
+
+	puts("hello world"); putchar(0xa);
+	printn(d[2]); putchar(0xa);
+	d[3] = 22000;
+	printn(d[2]); putchar(0xa);
+	printn(d[3]); putchar(0xa);
+	printn(d[4]); putchar(0xa);
+	
+	printn(e); putchar(0xa);
+
+	a = 7;
+	b = 3;
+	c = a / b;
+	itoa(12345, buf, 10);
+	puts(buf); putchar(0xa);
+
+	a = v[0];
+	test(a, v); putchar(0xa);
+	printh(v[1]); putchar(0xa);
+	printh(v[2]); putchar(0xa);
+	printh(v[3]); putchar(0xa);
+
+
+	a = 22457;
+	b = 2;
+	while (b < 123){
+		printn(a / b); putchar(0xa);
+		b = b + 1;
+	}
+	
+	printn(a);
+	
+	while (a != 0){
+		a = a >>> 1;
+	}
+}

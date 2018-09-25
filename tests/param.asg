@@ -1,0 +1,74 @@
+func test(){
+	int p[0];			/* we have the address of "p". this will give us access to the */
+					/* parameters through the stack. it has to be the first item on auto data. */
+	int i = p[1] + 1;		/* variable "i" will hold the number of parameters */
+
+	printn(p[0]); puts("\n");	/* last parameter (function return address) */
+	printn(p[1]); puts("\n");	/* by convention, we can use this as a vararg param counter */
+	printn(p[2]); puts("\n");	/* 4th param */
+	printn(p[3]); puts("\n");	/* 3rd param */
+	printn(p[4]); puts("\n");	/* 2nd param */
+	printn(p[5]); puts("\n");	/* 1st param */
+	
+	puts("in order:\n");
+	while (i > 1){
+		printn(p[i]); puts("\n");
+		i = i - 1;
+	}
+	puts("\n");
+}
+
+func test2(){
+	int p[0];
+	int i = p[1] + 1;
+
+	while (i > 1){
+		printn(p[i]); puts(" ");
+		i = i - 1;
+	}
+	puts("\n");
+}
+
+func test3(){
+	int p[0];
+	int i = p[1] + 1;
+	char s;				/* this is a pointer to char */
+	
+	while (i > 1){
+		s = p[i];
+		puts(s);
+		i = i - 1;
+	}
+}
+
+func test4(int a, int b, int c){
+	int p[0];
+	int i = 0;			/* we could skip the first parameter (return address) */
+
+	printn(a); putchar(0xa);	/* first parameters can be accessed this way */
+	printn(b); putchar(0xa);
+	printn(c); putchar(0xa); putchar(0xa);
+	printhex(0x7fff, 4); puts(" ");
+
+	while (p[i]){			/* the list of parameters is NULL terminated */
+		printhex(p[i], 4); puts(" ");
+		i = i + 1;
+	}
+	puts("\n");
+}
+
+func main(){
+	int i = 11, j = 22, k = 33, l = 44;
+
+	/* parameters are pushed to the stack, and will be evaluated in the reverse order */
+	/* push the number of parameters as the last param (not including the last param!) */
+	test(i, j, k, l, 4);
+	test2(i, j, 2);
+	test2(i, j, k, l, 4);
+	test2(i, 1);
+	test2(123, 456, 789, 987, 654, 321, 6);
+	test3("hello\n", "hola\n", 2);
+	test4(555, 123, 456, 789, 987, 654, 321);
+	test4(99,88,77,66,55,44,33,22,11);
+	test4(99);
+}

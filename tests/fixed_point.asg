@@ -1,0 +1,102 @@
+func epsilon()
+{
+	int x = 1.0;
+
+	while ((1.0 + (fix_div(x, 2.0)) > 1.0))
+		x = fix_div(x, 2.0);
+
+	return x;
+}
+
+func fac(int n)
+{
+	int i = 1, f = 1;
+
+	while (i <= n) {
+		f = f * i;
+		i = i + 1;
+	}
+
+	return f;
+}
+
+/*
+approximation of euler's number (2.718281828)
+*/
+
+func euler()
+{
+	int i = 0, e = 0;
+	char buf[20];
+
+	while (i < 8) {
+		/* 7! is already 5040. stop, so we don't overflow fixed representation after the shift */
+		e = e + fix_div(1.0, fac(i) << 16);
+		puts("\n");
+		printn(i);
+		puts(" - ");
+		fixtoa(e, buf, 6);
+		puts(buf);
+		i = i + 1;
+	}
+}
+
+func test_fixlib()
+{
+	int f, x, i = 0;
+	char buf[20], buf2[20];
+	int angle, degrees = {0.0, 30.0, 45.0, 60.0, 90.0, 120.0, 135.0, 150.0, 180.0, 210.0, 225.0, 240.0, 270.0, 300.0, 315.0, 330.0, 360.0};
+
+	fixtoa(fix_mul(fix_div(1.0, 9.0), 9.0), buf, 6);
+	puts("\n(1.0 / 9.0) * 9.0: "); puts(buf); puts("\n");
+	fixtoa(fix_sqrt(2.0), buf, 6);
+	puts("sqrt 2: "); puts(buf); puts("\n");
+	fixtoa(fix_exp(5.0), buf, 6);
+	puts("exp 5: "); puts(buf); puts("\n");
+	fixtoa(fix_ln(2.0), buf, 6);
+	puts("ln 2: "); puts(buf); puts("\n");
+	fixtoa(fix_log(2.0, 10.0), buf, 6);
+	puts("log (2,10): "); puts(buf); puts("\n");
+	fixtoa(fix_pow(2.0, 3.0), buf, 6);
+	puts("pow (2,3): "); puts(buf); puts("\n");
+
+	while (i < 17) {
+		angle = degrees[i];
+		fixtoa(angle, buf2, 2);
+
+		fixtoa(fix_sin(fix_rad(angle)), buf, 6);
+		puts("\nsin "); puts(buf2); puts(": "); puts(buf);
+		fixtoa(fix_cos(fix_rad(angle)), buf, 6);
+		puts(" cos "); puts(buf2); puts(": "); puts(buf);
+		fixtoa(fix_tan(fix_rad(angle)), buf, 6);
+		puts(" tan "); puts(buf2); puts(": "); puts(buf);
+
+		fixtoa(fix_asin(fix_rad(angle)), buf, 6);
+		puts("\nasin "); puts(buf2); puts(": "); puts(buf);
+		fixtoa(fix_acos(fix_rad(angle)), buf, 6);
+		puts(" acos "); puts(buf2); puts(": "); puts(buf);
+		fixtoa(fix_atan(fix_rad(angle)), buf, 6);
+		puts(" atan "); puts(buf2); puts(": "); puts(buf);
+
+		fixtoa(fix_sinh(fix_rad(angle)), buf, 6);
+		puts("\nsinh "); puts(buf2); puts(": "); puts(buf);
+		fixtoa(fix_cosh(fix_rad(angle)), buf, 6);
+		puts(" cosh "); puts(buf2); puts(": "); puts(buf);
+		fixtoa(fix_tanh(fix_rad(angle)), buf, 6);
+		puts(" tanh "); puts(buf2); puts(": "); puts(buf);
+
+		i = i + 1;
+	}
+}
+
+func main()
+{
+	char buf[20];
+
+	puts("\nmachine epsilon: \n");
+	fixtoa(epsilon(), buf, 6); puts(buf);
+	puts("\n\napproximation of euler's number: \n");
+	euler();
+	puts("\n\nmath functions: \n");
+	test_fixlib();
+}

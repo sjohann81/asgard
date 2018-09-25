@@ -1,0 +1,130 @@
+int HEIGHT = 6;
+int WIDTH = 11;
+
+func show(int m){
+	int i, j;
+	
+	i = 0;
+	while (i < HEIGHT){
+		j = 0;
+		while (j < WIDTH){
+			printn(m[i * WIDTH + j]); puts(" ");
+			j = j + 1;
+		}
+		puts("\n");
+		i = i + 1;
+	}
+	puts("\n");
+}
+
+func mark(int m, int l, int c){
+	int h = 0, i = 0, j = 0, k = 1;
+	
+	m[l * WIDTH + c] = 1;
+	while (h < HEIGHT * WIDTH){
+		i = 0;
+		while (i < HEIGHT){
+			j = 0;
+			while (j < WIDTH){
+				if (m[i * WIDTH + j] == k){
+					if (i - 1 >= 0){
+						if (m[(i-1) * WIDTH + j] == 0)
+							m[(i-1) * WIDTH + j] = k+1;
+					}
+					if (i + 1 < HEIGHT){
+						if (m[(i+1) * WIDTH + j] == 0)
+							m[(i+1) * WIDTH + j] = k+1;
+					}
+					if (j - 1 >= 0){
+						if (m[i * WIDTH + j-1] == 0)
+							m[i * WIDTH + j-1] = k+1;
+					}
+					if (j + 1 < WIDTH){
+						if (m[i * WIDTH + j+1] == 0)
+							m[i * WIDTH + j+1] = k+1;
+					}
+				}
+				j = j + 1;
+			}
+			i = i + 1;
+		}
+		h = h + 1;
+		k = k + 1;
+	}
+}
+
+func find(int m, int i, int j){
+	int k = 2;
+	
+	while (k > 1){
+		k = m[i * WIDTH + j];
+		printn(i); puts(","); printn(j); puts(" | ");
+		if (i - 1 >= 0){
+			if (m[(i-1) * WIDTH + j] < k & m[(i-1) * WIDTH + j] > 0){
+				i = i - 1;
+				continue;
+			}
+		}
+		if (i + 1 < HEIGHT){
+			if (m[(i+1) * WIDTH + j] < k & m[(i+1) * WIDTH + j] > 0){
+				i = i + 1;
+				continue;
+			}
+		}
+		if (j - 1 >= 0){
+			if (m[i * WIDTH + j-1] < k & m[i * WIDTH + j-1] > 0){
+				j = j - 1;
+				continue;
+			}
+		}
+		if (j + 1 < WIDTH){
+			if (m[i * WIDTH + j+1] < k & m[i * WIDTH + j+1] > 0){
+				j = j + 1;
+				continue;
+			}
+		}
+	}
+}
+
+/*
+put the cheese in an empty place in the labirinth
+*/
+func put_cheese(int m, int l, int c){
+	if (l >= HEIGHT | l < 0 | c >= WIDTH | c < 0 | m[l * WIDTH + c] != 0){
+		return -1;
+	}else{
+		mark(m, l, c);
+		return 0;
+	}
+}
+
+/*
+put the rat in an empty place (paths are marked!)
+the place must be reacheble (not zero) and shouldn't be a wall
+*/
+func put_rat(int m, int l, int c){
+	if (l >= HEIGHT | l < 0 | c >= WIDTH | c < 0 | m[l * WIDTH + c] <= 0){
+		return -1;
+	}else{
+		find(m, l, c);
+		return 0;
+	}
+}
+
+func main(){
+	int labirinth = {
+		0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0,
+		0, -1, 0, 0, -1, 0, -1, 0, -1, -1, 0,
+		0, 0, -1, 0, -1, 0, -1, 0, 0, 0, -1,
+		0, -1, 0, -1, 0, 0, 0, -1, -1, 0, 0,
+		0, 0, 0, -1, 0, -1, 0, 0, 0, -1, 0,
+		0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0
+	};
+	
+	show(labirinth);
+	put_cheese(labirinth, 5, 10);
+	show(labirinth);
+	put_rat(labirinth, 0, 0);
+	
+	return 0;
+}

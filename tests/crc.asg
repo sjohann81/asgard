@@ -1,0 +1,36 @@
+char msg[100];
+
+func crc32(char v, int len)
+{
+	int i, crc, l;
+
+	crc = -1;
+	l = 0;
+	while (l < len){
+		crc = crc ^ (v[l] << 24);
+		i = 0;
+		while (i < 8){
+			if (crc & 0x80000000)
+				crc = (crc << 1) ^ 0x04c11db7;
+			else
+				crc = crc << 1;
+			i = i + 1;
+		}
+		l = l + 1;
+	}
+
+	return crc;
+}
+
+func main()
+{
+	int i, j, s, val;
+
+	puts("message: ");
+	gets(msg);
+	puts(msg);
+	s = strlen(msg); puts(" size: "); printn(s);
+	val = crc32(msg, s);
+	puts("\ncrc32: "); printh(val);
+
+}

@@ -1,0 +1,77 @@
+func gate_not(char i0)
+{
+	return ((~i0) & 1);
+}
+
+func gate_and(char i0, char i1)
+{
+	if ((i0 == 1) & (i1 == 1))
+		return 1;
+	else
+		return 0;
+}
+
+func gate_or(char i0, char i1)
+{
+	if ((i0 == 0) & (i1 == 0))
+		return 0;
+	else
+		return 1;
+}
+
+func gate_xor(char i0, char i1)
+{
+	if (i0 == i1)
+		return 0;
+	else
+		return 1;
+}
+
+func full_adder(char a, char b, char cin, char sum, char cout)
+{
+	char x;
+	
+	x = gate_xor(a, b);
+	sum[0] = gate_xor(cin, x);
+	cout[0] = gate_or(gate_and(cin, x), gate_and(a, b));
+}
+
+/*
+func adder8(char cin, char a, char b, char sum, char cout)
+{
+	
+}
+*/
+/*
+build the circuit as a connection matrix.
+N*N matrix? input + function + output matrix?
+
+the matrix can be built from a boolean expression;
+manually, or based on a table then using the sum of products to get an expression.
+
+show all input combinations and outputs in a table (using the circuit!)
+
+*/
+
+func main()
+{
+	char a, b, c, sum[1], cout[1];
+	
+	puts("a b c C S\n");
+	a = 0;
+	while (a < 2){
+		b = 0;
+		while (b < 2){
+			c = 0;
+			while (c < 2){
+				full_adder(a, b, c, sum, cout);
+				printn(a); putchar(' '); printn(b); putchar(' '); printn(c); putchar(' ');
+				printn(cout[0]); putchar(' '); printn(sum[0]); putchar(0x0a);
+				c = c + 1;
+			}
+			b = b + 1;
+		}
+		a = a + 1;
+	}
+
+}

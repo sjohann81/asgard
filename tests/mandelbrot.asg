@@ -1,0 +1,39 @@
+func mandelbrot(int left_edge, int right_edge, int top_edge, int bottom_edge,
+		int x_step, int y_step, int max_iter)
+{
+	int i, x, y, x0, y0, x_x, y_y;
+	char ch;
+	
+	y0 = top_edge;
+	while (y0 > bottom_edge) {
+		x0 = left_edge;
+		while (x0 < right_edge) {
+			y = 0;
+			x = 0;
+			ch = ' ';
+			i = 0;
+			while (i < max_iter) {
+				x_x = (x * x) / 200;
+				y_y = (y * y) / 200;
+				if (x_x + y_y > 800) {
+					ch = '0' + i;
+					if (i > 9)
+						ch = '@';
+					i = max_iter;
+				}
+				y = x * y / 100 + y0;
+				x = x_x - y_y + x0;
+				i = i + 1;
+			}
+			putchar(ch);
+			x0 = x0 + x_step;
+		}
+		putchar(0xa);
+		y0 = y0 - y_step;
+	}
+}
+
+func main()
+{
+	mandelbrot(-420, 300, 300, -300, 14, 30, 200);
+}

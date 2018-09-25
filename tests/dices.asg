@@ -1,0 +1,21 @@
+func main(){
+	int ways, points, dice1, dice2, total;
+
+	points = 2;
+	do {
+		ways = 0;
+		dice1 = 1;
+		do {
+			dice2 = 1;
+			do {
+				total = dice1 + dice2;
+				if (total == points)
+					ways = ways + 1;
+				dice2 = dice2 + 1;
+			} while (dice2 <= 6);
+			dice1 = dice1 + 1;
+		} while (dice1 <= 6);
+		puts("points: "); printn(points); puts(", ways: "); printn(ways); puts("\n");
+		points = points + 1;
+	} while (points <= 12);
+}

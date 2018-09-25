@@ -1,0 +1,56 @@
+int V = 9;
+int SIZE = 81;
+int INFINITY = 32000;
+
+func print_solution(int dist, int n){
+	int i;
+	
+	puts("vertex\t\tdistance\n");
+	i = 0;
+	while (i < V){
+		printnum(i);
+		puts("\t\t");
+		printnum(dist[i]);
+		puts("\n");
+		i = i + 1;
+	}
+}
+
+func dijkstra(int cost, int graph, int dist, int current){
+	int i;
+	
+	if (dist[current] > cost){
+		dist[current] = cost;
+	}
+	i = 0;
+	while (i < V){
+		if (graph[i * V + current] != 0 & dist[i] > cost + graph[i * V + current]){
+			dijkstra(cost + graph[i * V + current], graph, dist, i);
+		}
+		i = i + 1;
+	}
+}
+
+func main(){
+	int graph = {	0, 4, 0, 0, 0, 0, 0, 8, 0,
+				4, 0, 8, 0, 0, 0, 0, 11, 0,
+				0, 8, 0, 7, 0, 4, 0, 0, 2,
+				0, 0, 7, 0, 9, 14, 0, 0, 0,
+				0, 0, 0, 9, 0, 10, 0, 0, 0,
+				0, 0, 4, 0, 10, 0, 2, 0, 0,
+				0, 0, 0, 14, 0, 2, 0, 1, 6,
+				8, 11, 0, 0, 0, 0, 1, 0, 7,
+				0, 0, 2, 0, 0, 0, 6, 7, 0
+			};
+	int i, dist[9];
+	
+	i = 0;
+	while (i < V){
+		dist[i] = INFINITY;
+		i = i + 1;
+	}
+	puts("\n");
+
+	dijkstra(0, graph, dist, 0);
+	print_solution(dist, V);
+}

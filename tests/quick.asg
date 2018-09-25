@@ -1,0 +1,41 @@
+func swap(int a, int i, int j){
+	int temp;
+
+	temp = a[i];
+	a[i] = a[j];
+	a[j] = temp;
+}
+
+func qsort(int a, int left, int right){
+	int i, last, lr;
+	
+	if (left <= right){
+		lr = (left + right) >> 1;
+		swap(a, left, lr);
+		last = left;
+		i = left + 1;
+		while (i <= right){
+			if (a[i] < a[left]){
+				last = last + 1;
+				swap(a, last, i);
+			}
+			i = i + 1;
+		}
+		swap(a, left, last);
+		qsort(a, left, last - 1);
+		qsort(a, last + 1, right);
+	}
+}
+
+func main(){
+	int i;
+	int list = {-5, 3, 23, -64, 34, 3, 65, 7, 10, -4, 10};
+	
+	qsort(list, 0, 10);
+	i = 0;
+	while (i < 11){
+		printn(list[i]);
+		puts(", ");
+		i = i + 1;
+	}
+}

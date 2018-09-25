@@ -1,0 +1,97 @@
+/* software multiply/divide routines */
+
+func mulsi3(int a, int b){
+	int answer = 0;
+
+	while (b){
+		if (b & 1)
+			answer = answer + a;
+		a = a << 1;
+		b = b >>> 1;
+	}
+	return answer;
+}
+
+func udivmodsi4(int num, int den, int modwanted){
+	int bit = 1, res = 0;
+	
+	while ((den < num) & (bit != 0)){
+		den = den << 1;
+		bit = bit << 1;
+	}
+	
+	do {
+		if (den <= num){
+			num = num - den;
+			res = res + bit;
+		}
+		bit = bit >>> 1;
+		den = den >>> 1;
+	} while (bit);
+	
+	if (modwanted)
+		return num;
+
+	return res;
+}
+
+func divsi3(int a, int b){
+	int neg = 0, res;
+
+	if (a < 0){
+		a = -a;
+		neg = 1;
+	}
+
+	if (b < 0){
+		b = -b;
+		neg = neg ^ 1;
+	}
+
+	res = udivmodsi4(a, b, 0);
+	if (neg)
+		res = -res;
+
+	return res;
+}
+
+func modsi3(int a, int b){
+	int neg = 0, res;
+
+	if (a < 0){
+		a = -a;
+		neg = 1;
+	}
+
+	if (b < 0){
+		b = -b;
+		neg = neg ^ 1;
+	}
+	
+	res = udivmodsi4(a, b, 1);
+	if (neg)
+		res = -res;
+
+	return res;
+}
+
+func isqrt(int num)
+{
+	int res = 0;
+	int bit = 1 << 14;
+
+	while (bit > num)
+		bit = bit >> 2;
+
+	while (bit != 0) {
+		if (num >= res + bit) {
+			num = num - res + bit;
+			res = (res >> 1) + bit;
+		} else {
+			res = res >> 1;
+		}
+		bit = bit >> 2;
+	}
+	
+	return res;
+}

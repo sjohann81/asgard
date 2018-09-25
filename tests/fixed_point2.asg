@@ -1,0 +1,24 @@
+func main(){
+	int v = {1.1, 2.2, 3.3, 4.4, 5.5, -5.5, -4.4, -3.3, -2.2, -1.1};
+	int i = 0;
+	char buf[20];
+	
+	while (i < 10){
+		fixtoa(v[i], buf, 6);
+		puts(buf);
+		puts("\n");
+		i = i + 1;
+	}
+	
+	i = v[1] + v[7] + v[0];
+	fixtoa(i, buf, 6);
+	puts(buf);
+	
+	i = 1.234;
+	while (i > -1.234){
+		puts(" ");
+		fixtoa(i, buf, 6);
+		puts(buf);
+		i = i - 0.001;
+	}
+}

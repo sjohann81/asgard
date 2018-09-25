@@ -1,0 +1,30 @@
+func sort(int a, int n){
+	int i, j, t;
+	
+	i = 0;
+	while (i < n-1){
+		j = i + 1;
+		while (j < n){
+			if (a[i] > a[j]){
+				t = a[i];
+				a[i] = a[j];
+				a[j] = t;
+			}
+			j = j + 1;
+		}
+		i = i + 1;
+	}
+}
+
+func main(){
+	int i;
+	int list = {-5, 3, 23, -64, 34, 3, 65, 7, 10, -4, 10};
+	
+	sort(list, 11);
+	i = 0;
+	while (i < 11){
+		printn(list[i]);
+		puts(", ");
+		i = i + 1;
+	}
+}

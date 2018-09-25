@@ -1,0 +1,149 @@
+func puts(char s){
+	int i = 0;
+
+	while (s[i]){
+		putchar(s[i]);
+		i = i + 1;
+	}
+}
+
+func gets(char s){
+	int i = 0;
+	int c;
+
+	do {
+		c = getchar();
+		if (c == 0xa) break;
+		s[i] = c;
+		i = i + 1;
+	} while (c);
+	s[i+1] = 0;
+}
+
+func itoa(int n, char buf, int radix){
+	int tmp, strl = 1;
+
+	tmp = n;
+	while ((tmp / radix) != 0){
+		tmp = tmp / radix;
+		strl = strl + 1;
+	}
+	buf[strl] = 0;
+	tmp = n;
+	do {
+		buf[strl - 1] = (tmp % radix) + '0';
+		tmp = tmp / radix;
+		strl = strl - 1;
+	} while (strl);
+}
+
+func printnum(int n){
+	int a;
+
+	if (a = n / 10)
+		printnum(a);
+	putchar(n % 10 + '0');
+}
+
+func printn(int n){
+	if (n < 0){
+		n = -n;
+		putchar('-');
+	}
+	printnum(n);
+}
+
+func printh(int n){
+	int a, b;
+
+	if (a = n >>> 4)
+		printh(a);
+	b = n & 0xf;
+	if (b > 9)
+		b = b + '7';
+	else
+		b = b + '0';
+
+	putchar(b);
+}
+
+func printhex(int n, int digits){
+	int a;
+
+	while (digits > 0){
+		digits = digits - 1;
+		a = (n >> (digits << 2)) & 0xf;
+		if (a > 9)
+			a = a + '7';
+		else
+			a = a + '0';
+		putchar(a);
+	}
+}
+
+func hexdump(char buf, int size){
+	int k, l;
+	char ch;
+
+	k = 0;
+	while (k < size){
+		putchar(0x0a); printhex(buf + k, 4); putchar(' ');
+		l = 0;
+		while (l < 16){
+			printhex(buf[k + l], 2); putchar(' ');
+			if (l == 7) putchar(' ');
+			l = l + 1;
+		}
+		puts(" |");
+		l = 0;
+		while (l < 16){
+			ch = buf[k + l];
+			if ((ch >= 32) & (ch <= 126))
+				putchar(ch);
+			else
+				putchar('.');
+			l = l + 1;
+		}
+		putchar('|');
+		k = k + 16;
+	}
+}
+
+func memcpy(char dst, char src, int n){
+	int i;
+
+	while (i < n){
+		dst[i] = src[i];
+		i = i + 1;
+	}
+}
+
+func memset(char s, char c, int n){
+	while (n = n - 1)
+		s[n] = c;
+}
+
+func strcpy(char dst, char src){
+	int i = 0;
+
+	while (src[i]){
+		dst[i] = src[i];
+		i = i + 1;
+	}
+	dst[i] = 0;
+}
+
+func strlen(char s){
+	int i = 0;
+
+	while (s[i]){
+		i = i + 1;
+	}
+	return i;
+}
+
+
+/* memcmp, memset */
+
+/* strcat, strcmp, strcpy, strlen, strncat, strncmp, strncpy */
+

@@ -1,0 +1,101 @@
+func state1(){
+	puts("state 1: ");
+	
+	/* returns the event number. 0 stays in the same state */
+	return 3;
+}
+
+func state2(){
+	puts("state 2: ");
+	
+	return 2;
+}
+
+func state3(){
+	puts("state 3: ");
+	
+	return 3;
+}
+
+func state4(){
+	puts("state 4: ");
+	
+	return 3;
+}
+
+func state5(){
+	puts("state 5: ");
+	
+	return 1;
+}
+
+func noaction(){
+	puts("!");
+}
+
+func action1(){
+	puts(" action 1\n");
+}
+
+func action2(){
+	puts(" action 2\n");
+}
+
+func action3(){
+	puts(" action 3\n");
+}
+
+func action4(){
+	puts(" action 4\n");
+}
+
+func action5(){
+	puts(" action 5\n");
+}
+
+/*
+state transition matrix
+	event1	event2	event3
+state1	state1	state2	state3
+state2	state3	state4	state5
+state3	state1	state4	state2
+state4	state2	state3	state5
+state5	state5	state5	state5
+
+state action matrix
+noaction action2 action1 action3
+noaction action1 action3 action2
+noaction action4 action5 action2
+noaction action3 action2 action1
+noaction action5 action3 action4
+
+*/
+func main(){
+	int state_transition = {
+		state1, 3, 1, 2,
+		state2, 2, 3, 4,
+		state3, 0, 3, 1,
+		state4, 1, 2, 4,
+		state5, 5, 5, 5
+	};
+	int state_action = {
+		noaction, action2, action1, action3,
+		noaction, action1, action3, action2,
+		noaction, action4, action5, action2,
+		noaction, action3, action2, action1,
+		noaction, action5, action3, action4
+	};
+	int state = 0, event;
+
+	while (state != 5){
+		/* execute state code and return the event that happened on that state */
+		event = (state_transition[state * 4])();
+		puts("-->event "); printnum(event);
+		
+		/* execute action code based on the current state and associated action */
+		(state_action[state * 4 + event])();
+		
+		/* go to the next state, based on the current state and event */
+		state = state_transition[state * 4 + event];
+	}
+}

@@ -1,0 +1,80 @@
+func main()
+{
+	int i;
+	
+	i = 0;
+	while (i < 10) {
+		printn(i);
+		puts(" ");
+		i = i + 1;		
+	}
+	puts("\n");
+	while (i > 0) {
+		printn(i);
+		puts(" ");
+		i = i - 1;		
+	}
+	puts("\n");
+	while (i <= 10) {
+		printn(i);
+		puts(" ");
+		i = i + 1;		
+	}
+	puts("\n");
+	while (i >= 0) {
+		printn(i);
+		puts(" ");
+		i = i - 1;		
+	}
+	
+	puts("\n");
+	i = 0;
+	while (i < 10) {
+		if (i == 5) break;
+		printn(i);
+		puts(" ");
+		i = i + 1;		
+	}
+
+	puts("\n");
+	i = 0;
+	while (i < 10) {
+		if (i == 5){
+			i = i + 1;
+			continue;
+		}
+		printn(i);
+		puts(" ");
+		i = i + 1;		
+	}
+
+	puts("\n");
+	i = 10;
+	do {
+		printn(i);
+		puts(" ");
+		i = i - 1;
+	} while (i >= 0);
+	
+	puts("\n");
+	i = 10;
+	do {
+		if (i == 5) break;
+		printn(i);
+		puts(" ");
+		i = i - 1;
+	} while (i >= 0);
+
+	puts("\n");
+	i = 10;
+	do {
+		if (i == 5){
+			i = i - 1;
+			continue;
+		}
+		printn(i);
+		puts(" ");
+		i = i - 1;
+	} while (i >= 0);
+
+}

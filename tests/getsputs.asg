@@ -1,0 +1,7 @@
+func main(){
+	char buf[100];
+
+	puts("write something: ");
+	gets(buf);
+	puts("you wrote: "); puts(buf);
+}

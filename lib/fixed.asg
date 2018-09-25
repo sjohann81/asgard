@@ -1,0 +1,378 @@
+func fixtoa(int a, char str, int dec)
+{
+	int ndec = 0, slen = 0;
+	char tmp[20];
+	int fr, ip;
+
+	if (a < 0) {
+		str[slen] = '-';
+		slen = slen + 1;
+		a = -a;
+	}
+
+	ip = a >> 16;
+	do {
+		tmp[ndec] = '0' + ip % 10;
+		ndec = ndec + 1;
+		ip = ip / 10;
+	} while (ip != 0);
+
+	while (ndec > 0) {
+		ndec = ndec - 1;
+		str[slen] = tmp[ndec];
+		slen = slen + 1;
+	}
+	str[slen] = '.';
+	slen = slen + 1;
+
+	fr = a & 0xffff;
+	do {
+		fr = (fr & 0xffff) * 10;
+		str[slen] = '0' + (fr >>> 16) % 10;
+		slen = slen + 1;
+		ndec = ndec + 1;
+	} while (ndec < dec);
+	str[slen] = 0;
+}
+
+func fix_abs(int fp)
+{
+	if (fp < 0.0)
+		return -fp;
+	else
+		return fp;
+}
+
+func fix_mul(int x, int y)
+{
+	int neg = 0, res, a, b, c, d;
+
+	if (x < 0) {
+		x = -x;
+		neg = 1;
+	}
+
+	if (y < 0) {
+		y = -y;
+		neg = neg ^ 1;
+	}
+
+	a = x >>> 16;
+	b = x & 0xffff;
+	c = y >>> 16;
+	d = y & 0xffff;
+	res = ((d * b) >>> 16) + (d * a) + (c * b) + ((c * a) << 16);
+
+	if (neg)
+		res = -res;
+
+	return res;
+}
+
+func fix_div(int x, int y)
+{
+	int neg = 0, res;
+
+	if (x < 0) {
+		x = -x;
+		neg = 1;
+	}
+
+	if (y < 0) {
+		y = -y;
+		neg = neg ^ 1;
+	}
+
+	res = fix_mul(x, ((0x40000000 / y) << 2));
+
+	if (neg)
+		res = -res;
+
+	return res;
+}
+
+func fix_sqrt(int fp)
+{
+	int a, n = 3;
+
+	if (fp < 0)
+		return -1;
+	if (fp == 0 | fp == 1)
+		return fp;
+
+	a = fp >> 1;
+	while (n >= 0) {
+		a = a - fix_div((fix_mul(a, a) - fp), (a << 1));
+		n = n - 1;
+	}
+
+	return a;
+}
+
+func fix_exp(int fp)
+{
+	int xabs, k, z, r, xp;
+	int p0 =  0.166666666666666019;
+	int p1 = -0.002777777777701559;
+	int p2 =  0.000066137563214379;
+	int p3 = -0.000001653390220547;
+	int p4 =  0.000000041381367971;
+	int ln2 = 0.693147180559945309;
+	int ln2_inv = 1.442695040888963407;
+
+	if (fp == 0)
+		return 1.0;
+
+	xabs = fix_abs(fp);
+	k = fix_mul(xabs, ln2_inv);
+	k = (k + 0.5) & 0xffff0000;
+
+	if (fp < 0)
+		k = -k;
+
+	fp = fp - fix_mul(k, ln2);
+	z = fix_mul(fp, fp);
+
+	r = 2.0 + fix_mul(z, p0 + fix_mul(z, p1 + fix_mul(z, p2 + fix_mul(z, p3 + fix_mul(z, p4)))));
+	xp = 1.0 + fix_div(fix_mul(fp, 2.0), r - fp);
+
+	if (k < 0)
+		k = 1.0 >> (-k >> 16);
+	else
+		k = 1.0 << (k >> 16);
+
+	return fix_mul(k, xp);
+}
+
+func fix_ln(int fp)
+{
+	int log2, xi;
+	int f, s, z, w, r;
+	int p0 = 0.666666666666673513;
+	int p1 = 0.399999999994094191;
+	int p2 = 0.285714287436623915;
+	int p3 = 0.22222198432149784;
+	int p4 = 0.181835721616180501;
+	int p5 = 0.153138376992093733;
+	int p6 = 0.147981986051165859;
+	int ln2 = 0.693147180559945309;
+
+	if (fp < 0)
+		return 0;
+	if (fp == 0)
+		return -1;
+
+	log2 = 0;
+	xi = fp;
+	while (xi >= 2.0) {
+		xi = xi >> 1;
+		log2 = log2 + 1;
+	}
+	f = xi - 1.0;
+	s = fix_div(f, 2.0 + f);
+	z = fix_mul(s, s);
+	w = fix_mul(z, z);
+	r = fix_mul(w, p1 + fix_mul(w, p3 + fix_mul(w, p5))) + fix_mul(z, p0 + fix_mul(w, p2 + fix_mul(w, p4 + fix_mul(w, p6))));
+	r = fix_mul(ln2, (log2 << 16)) + f - fix_mul(s, f - r);
+
+	return r;
+}
+
+func fix_log(int fp, int base)
+{
+	return fix_div(fix_ln(fp), fix_ln(base));
+}
+
+func fix_pow(int fp, int exp)
+{
+	if (exp == 0)
+		return 1.0;
+
+	if (fp < 0)
+		return 0.0;
+
+	return fix_exp(fix_mul(fix_ln(fp), exp));
+}
+
+func fix_rad(int deg)
+{
+	return fix_div(fix_mul(deg, 3.141592653589793238), 180.0);
+}
+
+func fix_sin(int rad)
+{
+	int sine;
+
+	if (rad < -3.141592653589793238)
+		rad = rad + 6.283185307179586477;
+	else if (rad > 3.141592653589793238)
+		rad = rad - 6.283185307179586477;
+
+	if (rad < 0)
+		sine = fix_mul(1.273239544735162686, rad) + fix_mul(fix_mul(0.405284734569351086, rad), rad);
+	else
+		sine = fix_mul(1.273239544735162686, rad) - fix_mul(fix_mul(0.405284734569351086, rad), rad);
+
+	if (sine < 0)
+		sine = fix_mul(0.225, (fix_mul(sine, -sine) - sine)) + sine;
+	else
+		sine = fix_mul(0.225, (fix_mul(sine, sine) - sine)) + sine;
+
+	return sine;
+}
+
+func fix_cos(int rad)
+{
+	return fix_sin(rad + 1.570796326794896619);
+}
+
+func fix_tan(int rad)
+{
+	return fix_div(fix_sin(rad), fix_cos(rad));
+}
+
+func xatan(int arg)
+{
+	int p4 =   16.153641298223022826;
+	int p3 =  268.425481955039737941;
+	int p2 = 1153.029351540485011543;
+	int p1 = 1780.406316433196971055;
+	int p0 =  896.785974036638619625;
+	int q4 =   58.956970508444622228;
+	int q3 =  536.265374031215315104;
+	int q2 = 1666.783814881633718452;
+	int q1 = 2079.334974445409812873;
+	int argsq, value;
+
+	argsq = fix_mul(arg, arg);
+	value = fix_mul((fix_mul((fix_mul((fix_mul(p4, argsq) + p3), argsq) + p2), argsq) + p1), argsq) + p0;
+	value = fix_div(value, (fix_mul((fix_mul((fix_mul((fix_mul((argsq + q4), argsq) + q3), argsq) + q2), argsq) + q1), argsq) + p0));
+
+	return fix_mul(value, arg);
+}
+
+func satan(int arg)
+{
+	int sq2p1 = 2.414213562373095049;
+	int sq2m1 = 0.414213562373095049;
+
+	if (arg < sq2m1)
+		return xatan(arg);
+	else if (arg > sq2p1)
+		return (1.570796326794896619 - xatan(fix_div(1.0, arg)));
+	else
+		return (0.78539816339744831 + xatan(fix_div((arg - 1.0), (arg + 1.0))));
+}
+
+func fix_atan(int arg)
+{
+	if (arg > 0)
+		return satan(arg);
+	else
+		return -satan(-arg);
+}
+
+func fix_atan2(int arg1, int arg2)
+{
+	if ((arg1 + arg2) == arg1)
+		if(arg1 >= 0.0)
+			return 1.570796326794896619;
+		else
+			return -1.570796326794896619;
+	else if (arg2 < 0.0)
+		if(arg1 >= 0.0)
+			return (3.141592653589793238 - satan(fix_div(-arg1, arg2)));
+		else
+			return (-3.141592653589793238 + satan(fix_div(arg1, arg2)));
+	else if (arg1 > 0.0)
+		return satan(fix_div(arg1, arg2));
+	else
+		return -satan(fix_div(-arg1, arg2));
+}
+
+func fix_asin(int arg)
+{
+	int sign, temp;
+
+	sign = 1.0;
+	if (arg < 0.0) {
+		arg = -arg;
+		sign = -1.0;
+	}
+
+	if(arg > 1.0)
+		return 0.0;
+
+	temp = fix_sqrt(1.0 - fix_mul(arg, arg));
+
+	if (arg > 0.7)
+		temp = 1.570796326794896619 - fix_atan(fix_div(temp, arg));
+	else
+		temp = fix_atan(fix_div(arg, temp));
+
+	return fix_mul(sign, temp);
+}
+
+func fix_acos(int arg)
+{
+	if ((arg > 1.0) | (arg < -1.0))
+		return 0.0;
+
+	return (1.570796326794896619 - fix_asin(arg));
+}
+
+func fix_sinh(int arg)
+{
+	int temp, sign;
+
+	sign = 1.0;
+	if (arg < 0.0) {
+		arg = - arg;
+		sign = -1.0;
+	}
+
+	if (arg > 21.0) {
+		temp = fix_exp(arg) >> 1;
+		if (sign > 0)
+			return temp;
+		else
+			return -temp;
+	}
+
+	temp = fix_mul(sign, (fix_exp(arg) - fix_exp(-arg))) >> 1;
+
+	return temp;
+}
+
+func fix_cosh(int arg)
+{
+	int temp;
+
+	if (arg < 0.0)
+		arg = -arg;
+
+	if (arg > 21.0)
+		return fix_exp(arg) >> 1;
+
+	temp = (fix_exp(arg) + fix_exp(-arg)) >> 1;
+
+	return temp;
+}
+
+func fix_tanh(int arg)
+{
+	int sign, temp;
+
+	sign = 1.0;
+	if (arg < 0.0) {
+		arg = -arg;
+		sign = -1.0;
+	}
+
+	if (arg > 21.0)
+		return sign;
+
+	temp = fix_div(fix_mul(sign, fix_sinh(arg)), fix_cosh(arg));
+
+	return temp;
+}

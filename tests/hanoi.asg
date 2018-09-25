@@ -1,0 +1,29 @@
+int moves = 0;
+
+func print_move(int n, int a, int b){
+	puts("\nmove disc ");
+	printnum(n);
+	puts(" from peg ");
+	printnum(a);
+	puts(" to peg ");
+	printnum(b);
+}
+
+/* disk, source, dest, spare */
+func hanoi(int n, int a, int b, int c){
+	if (n == 1){
+		print_move(n, a, b);
+	}else{
+		hanoi(n-1, a, c, b);
+		print_move(n, a, b);
+		hanoi(n-1, c, b, a);
+	}
+	moves = moves + 1;
+}
+
+func main(){
+	hanoi(10, 1, 3, 2);
+	puts("\ndone in ");
+	printnum(moves);
+	puts(" moves.");
+}

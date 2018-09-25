@@ -1,0 +1,35 @@
+func shellsort(int v, int n){
+	int gap, i, j;
+	int temp;
+	
+	gap = n >>> 1;
+	while (gap > 0){
+		i = gap;
+		while (i < n){
+			j = i - gap;
+			while (j >= 0){
+				if (v[j] > v[j + gap]){
+					temp = v[j];
+					v[j] = v[j + gap];
+					v[j + gap] = temp;
+				}
+				j = j - gap;
+			}
+			i = i + 1;
+		}
+		gap = gap >>> 1;
+	}
+}
+
+func main(){
+	int i;
+	int list = {-5, 3, 23, -64, 34, 3, 65, 7, 10, -4, 10};
+	
+	shellsort(list, 11);
+	i = 0;
+	while (i < 11){
+		printn(list[i]);
+		puts(", ");
+		i = i + 1;
+	}
+}

@@ -1,0 +1,109 @@
+/* parser.asg: simple parser -- no output
+ * grammar:
+ *   P ---> E '#'
+ *   E ---> T {('+'|'-') T}
+ *   T ---> S {('*'|'/') S}
+ *   S ---> F '^' S | F
+ *   F ---> char | '(' E ')'
+ */
+
+int level = 0;
+char next;
+
+func scan()
+{
+	do {
+		next = getchar();
+	} while (next == ' ' | next == 0x9);
+}
+
+func error(int n)
+{
+	puts("\n*** ERROR: ");
+	printn(n);
+}
+
+func spaces(int local_level)
+{
+	do {
+		puts("| ");
+		local_level = local_level - 1;
+	} while (local_level > 0);
+}
+
+func enter(char name)
+{
+	spaces(level);
+	level = level + 1;
+	puts("+-"); putchar(name); puts(": Enter, \t");
+	puts("Next == "); putchar(next); putchar(0xa);
+}
+
+func leave(char name)
+{
+	level = level - 1;
+	spaces(level);
+	puts("+-"); putchar(name); puts(": Leave, \t");
+	puts("Next == "); putchar(next); putchar(0xa);
+}
+
+func S()
+{
+	enter('S');
+	F();
+	if (next == '^') {
+		scan();
+		S();
+	}
+	leave('S');
+}
+
+func T()
+{
+	enter('T');
+	S();
+	while (next == '*' | next == '/') {
+		scan();
+		S();
+	}
+	leave('T');
+}
+
+func E()
+{
+	enter('E');
+	T();
+	while (next == '+' | next == '-') {
+		scan();
+		T();
+	}
+	leave('E');
+}
+
+func F()
+{
+	enter('F');
+	if ((next >= '0' & next <= '9') | (next >= 'a' & next <= 'z')) {
+		scan();
+	}else{
+		if (next == '(') {
+			scan();
+			E();
+			if (next == ')') scan();
+			else error(2);
+		}else{
+			error(3);
+		}
+	}
+	leave('F');
+}
+
+func main()
+{
+	scan();
+	E();
+	if (next != '#')
+		error(1);
+	else
+		puts("Successful parse\n");
+}

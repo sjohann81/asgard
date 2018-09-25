@@ -1,0 +1,202 @@
+func main()
+{	
+	int a = 545654, b = 1145654, c = -5456456, d = -11456456, e;
+	
+	a = 5;
+	b = 11;
+	c = -5;
+	d = -11;
+	
+	if (a > b)
+		puts("a > b: fail\n");
+	else
+		puts("a > b: pass\n");
+
+	if (a < b)
+		puts("a < b: pass\n");
+	else
+		puts("a < b: fail\n");
+		
+	if (a >= b)
+		puts("a >= b: fail\n");
+	else
+		puts("a >= b: pass\n");
+		
+	if (a <= b)
+		puts("a <= b: pass\n");
+	else
+		puts("a <= b: fail\n");
+		
+	if (a == b)
+		puts("a == b: fail\n");
+	else
+		puts("a == b: pass\n");
+		
+	if (a != b)
+		puts("a != b: pass\n");
+	else
+		puts("a != b: fail\n");
+
+
+	if (c > d)
+		puts("c > d: pass\n");
+	else
+		puts("c > d: fail\n");
+
+	if (c < d)
+		puts("c < d: fail\n");
+	else
+		puts("c < d: pass\n");
+		
+	if (c >= d)
+		puts("c >= d: pass\n");
+	else
+		puts("c >= d: fail\n");
+		
+	if (c <= d)
+		puts("c <= d: fail\n");
+	else
+		puts("c <= d: pass\n");
+		
+	if (c == d)
+		puts("c == d: fail\n");
+	else
+		puts("c == d: pass\n");
+		
+	if (c != d)
+		puts("c != d: pass\n");
+	else
+		puts("c != d: fail\n");
+
+
+	if (a > d)
+		puts("a > d: pass\n");
+	else
+		puts("a > d: fail\n");
+
+	if (a < d)
+		puts("a < d: fail\n");
+	else
+		puts("a < d: pass\n");
+		
+	if (a >= d)
+		puts("a >= d: pass\n");
+	else
+		puts("a >= d: fail\n");
+		
+	if (a <= d)
+		puts("a <= d: fail\n");
+	else
+		puts("a <= d: pass\n");
+		
+	if (a == d)
+		puts("a == d: fail\n");
+	else
+		puts("a == d: pass\n");
+		
+	if (a != d)
+		puts("a != d: pass\n");
+	else
+		puts("a != d: fail\n");
+		
+
+	puts("testing 32 bit ints...\n");
+		
+	a = 987438994;
+	b = 1145654452;
+	c = -545645645;
+	d = -2061180818;
+
+	if (a > b)
+		puts("a > b: fail\n");
+	else
+		puts("a > b: pass\n");
+
+	if (a < b)
+		puts("a < b: pass\n");
+	else
+		puts("a < b: fail\n");
+		
+	if (a >= b)
+		puts("a >= b: fail\n");
+	else
+		puts("a >= b: pass\n");
+		
+	if (a <= b)
+		puts("a <= b: pass\n");
+	else
+		puts("a <= b: fail\n");
+		
+	if (a == b)
+		puts("a == b: fail\n");
+	else
+		puts("a == b: pass\n");
+		
+	if (a != b)
+		puts("a != b: pass\n");
+	else
+		puts("a != b: fail\n");
+
+
+	if (c > d)
+		puts("c > d: pass\n");
+	else
+		puts("c > d: fail\n");
+
+	if (c < d)
+		puts("c < d: fail\n");
+	else
+		puts("c < d: pass\n");
+		
+	if (c >= d)
+		puts("c >= d: pass\n");
+	else
+		puts("c >= d: fail\n");
+		
+	if (c <= d)
+		puts("c <= d: fail\n");
+	else
+		puts("c <= d: pass\n");
+		
+	if (c == d)
+		puts("c == d: fail\n");
+	else
+		puts("c == d: pass\n");
+		
+	if (c != d)
+		puts("c != d: pass\n");
+	else
+		puts("c != d: fail\n");
+
+
+	if (a > d)
+		puts("a > d: pass\n");
+	else
+		puts("a > d: fail\n");
+
+	if (a < d)
+		puts("a < d: fail\n");
+	else
+		puts("a < d: pass\n");
+		
+	if (a >= d)
+		puts("a >= d: pass\n");
+	else
+		puts("a >= d: fail\n");
+		
+	if (a <= d)
+		puts("a <= d: fail\n");
+	else
+		puts("a <= d: pass\n");
+		
+	if (a == d)
+		puts("a == d: fail\n");
+	else
+		puts("a == d: pass\n");
+		
+	if (a != d)
+		puts("a != d: pass\n");
+	else
+		puts("a != d: fail\n");
+	
+}

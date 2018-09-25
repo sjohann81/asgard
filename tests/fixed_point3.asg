@@ -1,0 +1,57 @@
+func main(){
+	int v = {
+		10.0, 9.0, 11.0, 12.0, 8.0,
+		15.0, 12.0, 16.0, 10.0, 11.0,
+		11.0, 10.0, 8.0, 11.0, 12.0,
+		8.0, 12.0, 15.0, 9.0, 11.0
+		};
+	int avg = {0.0, 0.0, 0.0, 0.0};
+	int variance = {0.0, 0.0, 0.0, 0.0};
+	int stddev = {0.0, 0.0, 0.0, 0.0};
+	
+	int i, j, m, diff;
+	char buf[20];
+	
+	i = 0;
+	while (i < 4){
+		j = 0;
+		m = 0;
+		puts("worker "); printn(i); puts(" :\t");
+		while (j < 5){
+			fixtoa(v[i * 5 + j], buf, 4);
+			puts(buf);
+			puts("\t");
+			m = m + v[i * 5 + j];
+			j = j + 1;
+		}
+		avg[i] = m / 5;
+		puts("avg: "); fixtoa(avg[i], buf, 4); puts(buf);
+		i = i + 1;
+		puts("\n");
+	}
+	
+	i = 0;
+	while (i < 4){
+		j = 0;
+		puts("variance "); printn(i); puts(" :\t");
+		while (j < 5){
+			diff = v[i * 5 + j] - avg[i];
+			variance[i] = variance[i] + (fix_mul(diff, diff));
+			j = j + 1;
+		}
+		variance[i] = variance[i] / 5;
+		fixtoa(variance[i], buf, 6); puts(buf);
+		i = i + 1;
+		puts("\n");
+	}
+	
+	i = 0;
+	while (i < 4){
+		j = 0;
+		puts("std dev "); printn(i); puts(" :\t");
+		stddev[i] = fix_sqrt(variance[i]);
+		fixtoa(stddev[i], buf, 6); puts(buf);
+		i = i + 1;
+		puts("\n");
+	}
+}

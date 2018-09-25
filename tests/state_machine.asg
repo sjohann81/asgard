@@ -1,0 +1,31 @@
+func s3(){
+	puts("final state...\n");
+	
+	return 0;
+}
+
+func s2(){
+	puts("third state...\n");
+	
+	return s3;
+}
+
+func s1(){
+	puts("second state...\n");
+	
+	return s2;
+}
+
+func s0(){
+	puts("first state...\n");
+	
+	return s1;
+}
+
+func main(){
+	int state = s0;
+	
+	while (state != 0){
+		state = (state)();
+	}
+}

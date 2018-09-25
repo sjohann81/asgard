@@ -1,0 +1,26 @@
+func add_callback(int a, int b)
+{
+	return a + b;
+}
+
+func mul_callback(int a, int b)
+{
+	return a * b;
+}
+
+func do_stuff(int callback, int a, int b)
+{
+	return (callback)(a, b);
+}
+
+func main()
+{
+	int res;
+	
+	puts("\nadd callback: ");
+	res = do_stuff(add_callback, 3, 5);
+	printn(res);
+	puts("\nmul callback: ");
+	res = do_stuff(mul_callback, 5, 6);
+	printn(res);
+}

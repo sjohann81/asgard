@@ -1,0 +1,30 @@
+func f0(){
+	puts("function 0\n");
+	return 3;
+}
+
+func f1(){
+	puts("function 1\n");
+	return 2;
+}
+
+func f2(){
+	puts("function 2\n");
+	return 1;
+}
+
+func f3(){
+	puts("function 3\n");
+	return 0;
+}
+
+func main(){
+	int func_table = {f0, f1, f2, f3};
+	int i = 0, v;
+	
+	while (i < 4){
+		v = (func_table[i])();
+		printn(v);
+		i = i + 1;
+	}
+}

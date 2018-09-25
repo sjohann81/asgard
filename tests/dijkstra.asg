@@ -1,0 +1,77 @@
+int V = 9;
+int SIZE = 81;
+int INFINITY = 32000;
+
+func print_solution(int dist, int n){
+	int i;
+	
+	puts("vertex\t\tdistance\n");
+	i = 0;
+	while (i < V){
+		printnum(i);
+		puts("\t\t");
+		printnum(dist[i]);
+		puts("\n");
+		i = i + 1;
+	}
+	puts("\n");
+}
+
+func min_dist(int dist, int sptset){
+	int min, min_index, v;
+	
+	min = INFINITY;
+	v = 0;
+	while (v < V){
+		if (sptset[v] == 0 & dist[v] <= min){
+			min = dist[v];
+			min_index = v;
+		}
+		v = v + 1;
+	}
+	return min_index;
+}
+
+func dijkstra(int graph, int dist, int src){
+	int i, u, v, count;
+	int sptset[9];
+	
+	i = 0;
+	while (i < V){
+		dist[i] = INFINITY;
+		sptset[i] = 0;
+		i = i + 1;
+	}
+	dist[src] = 0;
+	
+	count = 0;
+	while (count < V-1){
+		u = min_dist(dist, sptset);
+		sptset[u] = 1;
+		v = 0;
+		while (v < V){
+			if (sptset[v] == 0 & graph[u * V + v] != 0 & dist[u] != INFINITY & dist[u] + graph[u * V + v] < dist[v]){
+				dist[v] = dist[u] + graph[u * V + v];
+			}
+			v = v + 1;
+		}
+		count = count + 1;
+	}
+}
+
+func main(){
+	int graph = {	0, 4, 0, 0, 0, 0, 0, 8, 0,
+				4, 0, 8, 0, 0, 0, 0, 11, 0,
+				0, 8, 0, 7, 0, 4, 0, 0, 2,
+				0, 0, 7, 0, 9, 14, 0, 0, 0,
+				0, 0, 0, 9, 0, 10, 0, 0, 0,
+				0, 0, 4, 0, 10, 0, 2, 0, 0,
+				0, 0, 0, 14, 0, 2, 0, 1, 6,
+				8, 11, 0, 0, 0, 0, 1, 0, 7,
+				0, 0, 2, 0, 0, 0, 6, 7, 0
+			};
+	int dist[9];
+
+	dijkstra(graph, dist, 0);
+	print_solution(dist, V);
+}

@@ -1,0 +1,14 @@
+func fat(int u){
+	int v, w;
+	
+	if (u == 1)
+		v = 1;
+	else
+		v = fat(u - 1) * u;
+	
+	return v;
+}
+
+func main(){
+	printnum(fat(5));
+}

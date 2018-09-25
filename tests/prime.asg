@@ -1,0 +1,20 @@
+func factor_in_range(int k, int n){
+	if (k >= n)
+		return 0;
+	else
+		if ((n % k) == 0)
+			return 1;
+		else
+			return factor_in_range(k + 1, n);
+}
+
+func is_prime(int n){
+	if ((n > 1) & factor_in_range(2, n) == 0)
+		return 1;
+	else
+		return 0;
+}
+
+func main(){
+	printnum(is_prime(997));
+}

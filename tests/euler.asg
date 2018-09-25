@@ -1,0 +1,65 @@
+/*
+http://stackoverflow.com/questions/6964392/speed-comparison-with-project-euler-c-vs-python-vs-erlang-vs-haskell
+
+(in my system: Intel J1800 @2.41GHz, 1MB cache)
+
+(Asgard - 1112 bytes binary)
+842161320
+real	0m7.166s
+user	0m7.168s
+sys	0m0.000s
+
+(C - 7320 bytes binary, using the same integer square root used here)
+842161320
+
+real	0m5.138s
+user	0m5.136s
+sys	0m0.000s
+*/
+
+func isqrt(int a){
+	int i = 0, rem = 0, root = 0, divisor = 0;
+
+	while (i < 16){
+		root = root << 1;
+		rem = ((rem << 2) + (a >>> 30));
+		a = a << 2;
+		divisor = (root << 1) + 1;
+		if (divisor <= rem){
+			rem = rem - divisor;
+			root = root + 1;
+		}
+		i = i + 1;
+	}
+	return root;
+}
+
+func factor_count(int n)
+{
+	int isquare = isqrt(n) + 1;
+	int candidate = 2;
+	int count = 1, c;
+
+	while (candidate <= isquare & candidate <= n){
+		c = 1;
+		while (n % candidate == 0){
+			c = c + 1;
+			n = n / candidate;
+		}
+		count = count * c;
+		candidate = candidate + 1;
+	}
+	return count;
+}
+
+func main(){
+	int triangle = 1;
+	int index = 1;
+    
+	while (factor_count(triangle) < 1001)
+	{
+		index = index + 1;
+		triangle = triangle + index;
+		printn(triangle); putchar(0xa);
+	}
+}

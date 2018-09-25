@@ -1,0 +1,128 @@
+/*
+https://spin.atomicobject.com/2012/06/18/solving-sudoku-in-c-with-recursive-backtracking/
+http://planetsudoku.com/sudoku/9x9/standard/very-easy/
+*/
+
+func matrix_print(int a, int l, int c)
+{
+	int i, j;
+
+	i = 0;
+	while (i < l){
+		j = 0;
+		while (j < c){
+			printnum(a[i * c + j]);
+			puts("\t");
+			j = j + 1;
+		}
+		i = i + 1;
+		puts("\n");
+	}
+}
+
+func is_valid(int number, int puzzle, int row, int column)
+{
+	int i = 0, sector_row = 3 * (row / 3), sector_col = 3 * (column / 3), row1 = (row + 2) % 3,
+		row2 = (row + 4) % 3, col1 = (column + 2) % 3, col2 = (column + 4) % 3;
+
+	while (i < 9){
+		if (puzzle[i * 9 + column] == number) return 0;
+		if (puzzle[row * 9 + i] == number) return 0;
+
+		i = i + 1;
+	}
+
+	if (puzzle[(row1 + sector_row) * 9 + col1 + sector_col] == number) return 0;
+	if (puzzle[(row2 + sector_row) * 9 + col1 + sector_col] == number) return 0;
+	if (puzzle[(row1 + sector_row) * 9 + col2 + sector_col] == number) return 0;
+	if (puzzle[(row2 + sector_row) * 9 + col2 + sector_col] == number) return 0;
+
+	return 1;
+}
+
+func sudoku(int puzzle, int row, int column)
+{
+	int nextn = 1;
+
+	if (9 == row)
+		return 1;
+
+	if (puzzle[row * 9 + column]) {
+		if (column == 8) {
+			if (sudoku(puzzle, row + 1, 0)) return 1;
+		} else {
+			if (sudoku(puzzle, row, column + 1)) return 1;
+		}
+		return 0;
+	}
+
+	while (nextn < 10){
+		if (is_valid(nextn, puzzle, row, column)) {
+			puzzle[row * 9 + column] = nextn;
+			if (column == 8) {
+				if (sudoku(puzzle, row + 1, 0)) return 1;
+			} else {
+				if (sudoku(puzzle, row, column + 1)) return 1;
+			}
+			puzzle[row * 9 + column] = 0;
+		}
+		nextn = nextn + 1;
+	}
+
+	return 0;
+}
+
+func main()
+{
+	int puzzle = {	0, 0, 0, 9, 0, 4, 0, 0, 1,
+			0, 2, 0, 3, 0, 0, 0, 5, 0,
+			9, 0, 6, 0, 0, 0, 0, 0, 0,
+			8, 0, 0, 0, 4, 6, 0, 0, 0,
+			4, 0, 0, 0, 1, 0, 0, 0, 3,
+			0, 0, 0, 2, 7, 0, 0, 0, 5,
+			0, 0, 0, 0, 0, 0, 9, 0, 7,
+			0, 7, 0, 0, 0, 5, 0, 1, 0,
+			3, 0, 0, 4, 0, 7, 0, 0, 0
+	};
+	int puzzle2 = {	8, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 3, 6, 0, 0, 0, 0, 0,
+			0, 7, 0, 0, 9, 0, 2, 0, 0,
+			0, 5, 0, 0, 0, 7, 0, 0, 0,
+			0, 0, 0, 0, 4, 5, 7, 0, 0,
+			0, 0, 0, 1, 0, 0, 0, 3, 0,
+			0, 0, 1, 0, 0, 0, 0, 6, 8,
+			0, 0, 8, 5, 0, 0, 0, 1, 0,
+			0, 9, 0, 0, 0, 0, 4, 0, 0
+	};
+	int puzzle3 = { 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 3, 0, 8, 5,
+			0, 0, 1, 0, 2, 0, 0, 0, 0,
+			0, 0, 0, 5, 0, 7, 0, 0, 0,
+			0, 0, 4, 0, 0, 0, 1, 0, 0,
+			0, 9, 0, 0, 0, 0, 0, 0, 0,
+			5, 0, 0, 0, 0, 0, 0, 7, 3,
+			0, 0, 2, 0, 1, 0, 0, 0, 0,
+			0, 0, 0, 0, 4, 0, 0, 0, 9
+	};
+
+	puts("\npuzzle 1\n");
+	matrix_print(puzzle, 9, 9);
+	puts("\nsolving ...\n");
+	sudoku(puzzle, 0, 0);
+	matrix_print(puzzle, 9, 9);
+
+	/* this one is hard, but recursive backtracking handles it well */
+	puts("\npuzzle 2\n");
+	matrix_print(puzzle2, 9, 9);
+	puts("\nsolving ...\n");
+	sudoku(puzzle2, 0, 0);
+	matrix_print(puzzle2, 9, 9);
+
+	/* this one is VERY hard, breaks recursive backtracking */
+/*	puts("\npuzzle 3\n");
+	matrix_print(puzzle3, 9, 9);
+	puts("\nsolving ...\n");
+	sudoku(puzzle3, 0, 0);
+	matrix_print(puzzle3, 9, 9);
+*/
+}

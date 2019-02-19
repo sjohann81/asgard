@@ -1,0 +1,58 @@
+func main() {
+	int va, vb, vc;
+	int ptr, sz, i;
+	char cptr;
+
+	struct st {
+		int a;
+		int b;
+		char c;
+		int d[5];
+		int e[3];
+		char f;
+		char str[10];
+	}
+	
+	vc = 0x11;
+	st.a = 0x22;
+	st.b = 0x33;
+	st.c = 'a';
+
+	ptr = &st.d;
+	ptr[0] = 0x7aaa;
+	ptr[1] = 0x7bbb;
+	ptr[2] = 0x7ccc;
+	ptr = &st.e;
+	ptr[0] = 0x7555;
+	ptr[2] = 0x7666;
+	
+	st.f = 'b';
+	cptr = &st.str;
+	cptr[0] = 'h';
+	cptr[1] = 'e';
+	cptr[2] = 'l';
+	cptr[3] = 'l';
+	cptr[4] = 'o';
+	cptr[5] = '!';
+	cptr[6] = 0;
+	cptr[9] = 'c';
+	
+	sz = &cptr - st;
+	puts("struct size: "); printn(sz); putchar(0xa);
+	puts("value of &st: "); printh(&st); putchar(0xa);
+	puts("value of st: "); printh(st); putchar(0xa);
+	puts("value of (&st)[0]: "); printh((&st)[0]); putchar(0xa);
+	puts("value of (st)[0]: "); printh((st)[0]); putchar(0xa);
+	puts("value of &st.a: "); printh(&st.a); putchar(0xa);
+	puts("value of st.a: "); printh(st.a); putchar(0xa);
+	puts("value of (&st.e)[2]: "); printh((&st.e)[2]); putchar(0xa);
+	puts("values of puts(&st.str)): "); puts(&st.str); putchar(0xa);
+	
+	i = 0;
+	cptr = st;
+	while (i < sz) {
+		printh(cptr[i]); putchar(' ');
+		i = i + 1;
+	}
+	
+}

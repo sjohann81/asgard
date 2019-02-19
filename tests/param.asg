@@ -9,7 +9,7 @@ func test(){
 	printn(p[3]); puts("\n");	/* 3rd param */
 	printn(p[4]); puts("\n");	/* 2nd param */
 	printn(p[5]); puts("\n");	/* 1st param */
-	
+
 	puts("in order:\n");
 	while (i > 1){
 		printn(p[i]); puts("\n");
@@ -33,7 +33,7 @@ func test3(){
 	int p[0];
 	int i = p[1] + 1;
 	char s;				/* this is a pointer to char */
-	
+
 	while (i > 1){
 		s = p[i];
 		puts(s);

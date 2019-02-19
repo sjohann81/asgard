@@ -2,35 +2,55 @@ func main()
 {
 	int d = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0};
 	char w = "abcdefghijklmno";
-	int i, a, b, c, pint;
+	int i, a = 0x5555, b, c, pint;
 	char u, v, pchar;
-	
-	
+
 	i = 0;
 	puts("address of w[]:"); printh(w); putchar(0xa);
 	while (w[i]){
 		puts(" value of w["); printn(i); puts("]: "); putchar(w[i]); putchar(0xa);
 		i = i + 1;
 	}
-	
+
 	i = 0;
 	puts("address of d[]:"); printh(d); putchar(0xa);
 	while (d[i]){
 		puts(" value of d["); printn(i); puts("]: "); printn(d[i]); putchar(0xa);
 		i = i + 1;
 	}
-	
+
 	pchar = w;
 	while (pchar[0]){
 		puts("address of pchar: "); printh(pchar);
 		puts(" value: "); putchar(pchar[0]); putchar(0xa);
 		pchar = pchar + 1;
 	}
-	
+
 	pint = d;
 	while (pint[0]){
 		puts("address of pint: "); printh(pint);
 		puts(" value: "); printn(pint[0]); putchar(0xa);
+		pint = pint + 4;
+	}
+
+	puts("value of &w:"); printh(&w); putchar(0xa);
+	puts("value of w:"); printh(w); putchar(0xa);
+	puts("value of w[0]:"); printh(w[0]); putchar(0xa);
+	puts("address of a:"); printh(&a); putchar(0xa);
+	puts("address of b:"); printh(&b); putchar(0xa);
+	puts("address of v:"); printh(&v); putchar(0xa);
+
+	pchar = w;
+	while (*pchar){
+		puts("address of pchar: "); printh(pchar);
+		puts(" value: "); putchar(*pchar); putchar(0xa);
+		pchar = pchar + 1;
+	}
+
+	pint = d;
+	while (*pint){
+		puts("address of pint: "); printh(pint);
+		puts(" value: "); printn(*pint); putchar(0xa);
 		pint = pint + 4;
 	}
 }

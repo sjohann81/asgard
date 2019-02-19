@@ -14,7 +14,7 @@ func main(){
 	int list1[4];
 	int list2[4];
 	int lists[3];
-	int i = 0, j = 0;
+	int i = 0, j = 0, ptr;
 	char p;
 	
 	list1[0] = str1;
@@ -40,7 +40,13 @@ func main(){
 		i = i + 1;
 	}
 
-/*	p = (lists[1])[2];
-	puts(p);
-*/
+	ptr = lists;
+	while (*ptr){
+		j = 0;
+		while ((*ptr)[j]){
+			puts((*ptr)[j]);
+			j = j + 1;
+		}
+		ptr = ptr + 2;
+	}
 }

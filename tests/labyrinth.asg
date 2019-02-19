@@ -87,7 +87,7 @@ func find(int m, int i, int j){
 }
 
 /*
-put the cheese in an empty place in the labirinth
+put the cheese in an empty place in the labyrinth
 */
 func put_cheese(int m, int l, int c){
 	if (l >= HEIGHT | l < 0 | c >= WIDTH | c < 0 | m[l * WIDTH + c] != 0){
@@ -112,7 +112,7 @@ func put_rat(int m, int l, int c){
 }
 
 func main(){
-	int labirinth = {
+	int labyrinth = {
 		0, 0, -1, -1, 0, 0, 0, 0, 0, 0, 0,
 		0, -1, 0, 0, -1, 0, -1, 0, -1, -1, 0,
 		0, 0, -1, 0, -1, 0, -1, 0, 0, 0, -1,
@@ -121,10 +121,10 @@ func main(){
 		0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0
 	};
 	
-	show(labirinth);
-	put_cheese(labirinth, 5, 10);
-	show(labirinth);
-	put_rat(labirinth, 0, 0);
+	show(labyrinth);
+	put_cheese(labyrinth, 5, 10);
+	show(labyrinth);
+	put_rat(labyrinth, 0, 0);
 	
 	return 0;
 }

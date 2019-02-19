@@ -74,7 +74,7 @@ func modsi3(int a, int b){
 
 	return res;
 }
-
+/*
 func isqrt(int num)
 {
 	int res = 0;
@@ -95,3 +95,4 @@ func isqrt(int num)
 	
 	return res;
 }
+*/

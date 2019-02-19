@@ -6,7 +6,7 @@ func puts(char s){
 		i = i + 1;
 	}
 }
-
+/*
 func gets(char s){
 	int i = 0;
 	int c;
@@ -19,7 +19,7 @@ func gets(char s){
 	} while (c);
 	s[i+1] = 0;
 }
-
+*/
 func itoa(int n, char buf, int radix){
 	int tmp, strl = 1;
 

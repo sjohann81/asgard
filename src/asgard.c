@@ -216,6 +216,7 @@ static void emitd(void *buf, size_t len)
 #define TYPE_NUM		0
 #define TYPE_CHARVAR		1
 #define TYPE_INTVAR		2
+#define TYPE_STRUCT		3
 #define TYPE_FUNC		10
 #define TYPE_GCHARVAR		11
 #define TYPE_GINTVAR		12
@@ -288,6 +289,10 @@ static int typename()
 	if (peek("char")) {		/* byte */
 		readtok();
 		return TYPE_CHARVAR;
+	}
+	if (peek("struct")) {
+		readtok();
+		return TYPE_STRUCT;
 	}
 
 	return 0;
@@ -391,6 +396,7 @@ static int binary(int type, int (*f)(), char *buf, size_t len, int fixref, int a
 	if (type != TYPE_NUM) {
 		gen_unref(type);
 	}
+	
 	gen_push();
 	type = f();
 	if (type != TYPE_NUM && !array) {
@@ -461,12 +467,24 @@ static int prefix_expr()
 // FIXME: implement logical/bitwise not operators (! and ~)
 	if (peek("~")) {
 		accept("~");
-		expr();
+		expr();		// shouldn't be postfix_expr()? check this.
 		gen_complement();
 		type = TYPE_NUM;
 // FIXME: implement prefix inc/dec operators (++ and --)
 // FIXME: implement indirection / address of operators (* and &)
+	} else if (peek("&")) {
+		accept("&");
+		prim_expr();
+		type = TYPE_NUM;
+	} else if (peek("*")) {
+		accept("*");
+		type = prim_expr();
+		gen_unref(TYPE_NUM);
+		gen_unref(type);
+		type = TYPE_NUM;
 // FIXME: implement sizeof operator
+//	} else if (peek("$")) {
+		
 // FIXME: implement typecast
 	} else if (peek("-")) {
 		gen_clear();
@@ -637,7 +655,7 @@ static int expr() {
 
 static void statement(int blabel, int clabel)
 {
-	int t, s;
+	int t, s, i;
 
 	if (accept("{")) {
 		int prev_stack_pos = stack_pos;
@@ -658,6 +676,67 @@ static void statement(int blabel, int clabel)
 				var = sym_declare(tok, 'L', stack_pos);
 			else
 				var = sym_declare(tok, 'l', stack_pos);
+
+			if (t == TYPE_STRUCT) {
+				struct symbol *var2;
+				char tok2[MAXTOKSZ], tok3[MAXTOKSZ];
+				int entries = 0;
+
+				strcpy(tok2, tok);
+				readtok();
+				expect("{");
+				while ((t = typename())) {
+					entries++;
+					strcpy(tok3, tok2);
+					strcat(tok3, ".");
+					strcat(tok3, tok);
+					if (t == TYPE_FUNC)
+						error("error: functions are not allowed in this context\n");
+					if (t == TYPE_INTVAR || t == TYPE_GINTVAR)
+						var2 = sym_declare(tok3, 'L', stack_pos);
+					else
+						var2 = sym_declare(tok3, 'l', stack_pos);
+						
+					readtok();
+					if (accept("[")) {
+						if (!accept("]")) {
+							s = atoi(tok);
+							if (t == TYPE_INTVAR)
+								gen_array(TYPE_NUM_SIZE, s);
+							if (t == TYPE_CHARVAR)
+								gen_array(1, s);
+							var2->size = s;
+							readtok();
+							expect("]");
+						}
+					} else {
+						gen_push();
+					}
+					expect(";");
+					var2->addr = stack_pos-1;
+				}
+				expect("}");
+				
+				for (i = 0; i < entries; i++)
+					fprintf(stderr, "\n>>>%s, addr: %08x sz: %d", sym[sympos - 1 - i].name, sym[sympos - 1 - i].addr, sym[sympos - 1 - i].size);
+
+				int addr = sym[sympos - 1].addr;
+				int k = 0;
+				for (i = 0; i < entries; i++) {
+					sym[sympos - entries + i].addr = addr - i - k;
+					if (sym[sympos - entries + i].size)
+						k += sym[sympos - entries + i].size - 1;
+				}
+
+				for (i = 0; i < entries; i++)
+					fprintf(stderr, "\n>>>FIX: %s, addr: %08x sz: %d", sym[sympos - 1 - i].name, sym[sympos - 1 - i].addr, sym[sympos - 1 - i].size);
+
+				gen_stack_addr(0);
+				gen_push();
+				var->addr = stack_pos-1;
+				oper = 0;
+				return;
+			}
 
 			readtok();
 			if (accept("[")) {
@@ -909,10 +988,10 @@ static void compile()
 		}
 		/* reverse the order of declared function parameters so it matches pushed parameters on calls */
 		struct symbol s;
-		for (i = 0; i < argc/2; i++) {
-			s = sym[sympos-argc+i];
-			sym[sympos-argc+i].addr = sym[sympos-1-i].addr;
-			sym[sympos-1-i].addr = s.addr;
+		for (i = 0; i < argc / 2; i++) {
+			s = sym[sympos - argc + i];
+			sym[sympos - argc + i].addr = sym[sympos - 1 - i].addr;
+			sym[sympos - 1 - i].addr = s.addr;
 		}
 		expect(")");
 		if (accept(";") == 0) {

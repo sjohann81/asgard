@@ -27,15 +27,8 @@ func main() {
 	ptr[2] = 0x7666;
 	
 	st.f = 'b';
-	cptr = &st.str;
-	cptr[0] = 'h';
-	cptr[1] = 'e';
-	cptr[2] = 'l';
-	cptr[3] = 'l';
-	cptr[4] = 'o';
-	cptr[5] = '!';
-	cptr[6] = 0;
-	cptr[9] = 'c';
+
+	strcpy(&st.str, "hello!!");
 	
 	sz = &cptr - st;
 	puts("struct size: "); printn(sz); putchar(0xa);

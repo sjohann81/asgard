@@ -19,15 +19,14 @@ func udivmodsi4(int num, int den, int modwanted){
 		den = den << 1;
 		bit = bit << 1;
 	}
-	
-	do {
-		if (den <= num){
+	while (bit) {
+		if (num >= den){
 			num = num - den;
-			res = res + bit;
+			res = res | bit;
 		}
 		bit = bit >>> 1;
 		den = den >>> 1;
-	} while (bit);
+	}
 	
 	if (modwanted)
 		return num;
@@ -65,7 +64,7 @@ func modsi3(int a, int b){
 
 	if (b < 0){
 		b = -b;
-		neg = neg ^ 1;
+/*		neg = neg ^ 1;*/
 	}
 	
 	res = udivmodsi4(a, b, 1);

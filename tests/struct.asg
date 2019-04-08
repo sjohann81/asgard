@@ -1,3 +1,13 @@
+struct gst {
+	int a;
+	int b;
+	char c;
+	int d[5];
+	int e[3];
+	char f;
+	char str[10];
+};
+
 func main() {
 	int va, vb, vc;
 	int ptr, sz, i;
@@ -11,7 +21,7 @@ func main() {
 		int e[3];
 		char f;
 		char str[10];
-	}
+	};
 	
 	vc = 0x11;
 	st.a = 0x22;
@@ -39,13 +49,31 @@ func main() {
 	puts("value of &st.a: "); printh(&st.a); putchar(0xa);
 	puts("value of st.a: "); printh(st.a); putchar(0xa);
 	puts("value of (&st.e)[2]: "); printh((&st.e)[2]); putchar(0xa);
-	puts("values of puts(&st.str)): "); puts(&st.str); putchar(0xa);
+	puts("values of puts(&st.str): "); puts(&st.str); putchar(0xa);
 	
-	i = 0;
-	cptr = st;
-	while (i < sz) {
-		printh(cptr[i]); putchar(' ');
-		i = i + 1;
-	}
+	hexdump(st, sz);
+	
+	gst.a = st.a;
+	gst.b = st.b;
+	gst.c = st.c;
+	
+	(&gst.d)[0] = (&st.d)[0];
+	(&gst.d)[1] = (&st.d)[1];
+	(&gst.d)[2] = (&st.d)[2];
+	(&gst.e)[0] = (&st.e)[0];
+	(&gst.e)[2] = (&st.e)[2];
+	gst.f = st.f;
+	strcpy(&gst.str, &st.str);
+	
+/*	puts("value of &gst: "); printh(&gst); putchar(0xa);
+	puts("value of gst: "); printh(gst); putchar(0xa);
+	puts("value of (&gst)[0]: "); printh((&gst)[0]); putchar(0xa);
+	puts("value of (gst)[0]: "); printh((gst)[0]); putchar(0xa);*/
+	puts("value of &gst.a: "); printh(&gst.a); putchar(0xa);
+	puts("value of gst.a: "); printh(gst.a); putchar(0xa);
+	puts("value of (&gst.e)[2]: "); printh((&gst.e)[2]); putchar(0xa);
+	puts("values of puts(&gst.str): "); puts(&gst.str); putchar(0xa);
+	
+/*	hexdump(gst, sz);*/
 	
 }

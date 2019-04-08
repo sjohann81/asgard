@@ -716,6 +716,7 @@ static void statement(int blabel, int clabel)
 					var2->addr = stack_pos-1;
 				}
 				expect("}");
+				expect(";");
 				
 				for (i = 0; i < entries; i++)
 					fprintf(stderr, "\n>>>%s, addr: %08x sz: %d", sym[sympos - 1 - i].name, sym[sympos - 1 - i].addr, sym[sympos - 1 - i].size);
@@ -837,6 +838,7 @@ static void statement(int blabel, int clabel)
 static void compile()
 {
 	int i, j, n, type, s;
+	char tok2[MAXTOKSZ], tok3[MAXTOKSZ];
 
 	while (tok[0] != 0) { /* until EOF */
 		if ((type = typename()) == 0) {
@@ -847,6 +849,7 @@ static void compile()
 		do {
 			s = 1;
 			var = sym_declare(tok, 'U', 0);
+			strcpy(tok2, tok);
 			readtok();
 
 			if (accept("[")) {
@@ -946,24 +949,68 @@ static void compile()
 					var->size = s;
 				}
 			} else {
-				if (type == TYPE_INTVAR) {
-					if (s > 1) {
-						gen_array_int1(var, 1);
-						for (i = 0; i < s; i++)
-							gen_array_int2(1);
-					} else {
-						gen_array_int0(var, 1);
-						gen_array_int2(1);
+				if (type == TYPE_STRUCT) {
+					int entries = 0;
+
+					expect("{");
+					while ((type = typename())) {
+						entries++;
+						strcpy(tok3, tok2);
+						strcat(tok3, ".");
+						strcat(tok3, tok);
+						if (type == TYPE_FUNC)
+							error("error: functions are not allowed in this context\n");
+
+						s = 1;
+						var = sym_declare(tok3, 'U', 0);
+						readtok();
+						if (accept("[")) {
+							if (!accept("]")) {
+								s = atoi(tok);
+								readtok();
+								expect("]");
+							}
+						}
+						expect(";");
+						if (type == TYPE_INTVAR) {
+							gen_array_int0(var, 1);
+							for (i = 0; i < s; i++)
+								gen_array_int2(1);
+							gen_array_int3(1);
+							var->addr = datapos;
+							var->type = 'G';
+							var->size = s;
+						} else {
+							gen_array_int0(var, 1);
+							for (i = 0; i < (s / TYPE_NUM_SIZE) + 1; i++)
+								gen_array_int2(1);
+							gen_array_int3(1);
+							var->addr = datapos;
+							var->type = 'g';
+							var->size = s;
+						}
 					}
-					gen_array_int3(1);
-					var->addr = datapos;
-					var->type = 'G';
-					var->size = s;
+					expect("}");
 				} else {
-					gen_array_str(var, tok, s, 1, 1);
-					var->addr = datapos;
-					var->type = 'g';
-					var->size = s;
+					if (type == TYPE_INTVAR) {
+						if (s > 1) {
+							gen_array_int1(var, 1);
+							for (i = 0; i < s; i++)
+								gen_array_int2(1);
+						} else {
+							gen_array_int0(var, 1);
+							gen_array_int2(1);
+						}
+						gen_array_int3(1);
+						var->addr = datapos;
+						var->type = 'G';
+						var->size = s;
+					} else {
+						gen_array_str(var, tok, s, 1, 1);
+						var->addr = datapos;
+						var->type = 'g';
+						var->size = s;
+					}
 				}
 			}
 		} while (accept(","));

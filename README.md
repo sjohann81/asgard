@@ -3,11 +3,11 @@
 ---
 ### Description
 
-This is an experimental programming language and a compiler for this language. The compiler uses a minimal scanner, a simple recursive-descent parser and direct code generation. The compiler backend uses patterns for code generation, making it easily retargetable. The compiler backends are so simple that a retarget to a new architecture can be done in an hour or less.
+Asgard is an experimental programming language and a compiler for this language. The compiler uses a minimal scanner, a simple recursive-descent parser and direct code generation. Retarget / port of the compiler backed is easy, as it uses simple patterns and a small set of functions for code generation. The compiler backends are so simple that a retarget to a new architecture can be done in an hour or less.
 
 ### Build process
 
-Just type 'make' to build compilers for different targets. Currently, the MARS (MIPS simulator), x86 (Linux) and Viking (16 and 32 bit) targets are supported. 
+Just type 'make' to build compilers for different targets. Currently, the MARS (MIPS simulator), x86 (Linux) and Viking (16 and 32 bit) targets are supported.
 
 ### Compilation process
 

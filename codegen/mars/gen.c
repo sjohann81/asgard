@@ -173,10 +173,10 @@ void gen_array_str(struct symbol *s, char *array, int size, char global, char em
 		if (size > 1) {
 			emitfd("%s:	.word ___%s\n", s->name, s->name);
 			emitfd("___%s:	.byte ", s->name);
-			if (empty){
+			if (empty) {
 				for (i = 0; i < size; i++)
 					emitsd("0 ");
-			}else{
+			} else {
 				for (i = 0; i < size; i++)
 					emitfd("%d ", array[i]);
 			}

@@ -219,13 +219,13 @@ static void gen_array_str(struct symbol *s, char *array, int size, char global, 
 	if (global){
 		if (size > 1){
 			emitfd("%s:	.word ___%s\n", s->name, s->name);
-			emitfd("___%s:	.asciiz \"", s->name);
+			emitfd("___%s:	.byte ", s->name);
 			if (empty){
 				for (i = 0; i < size; i++)
-					emitsd(" ");
+					emitsd("0 ");
 			}else{
 				for (i = 0; i < size; i++)
-					emitfd("%c", array[i]);
+					emitfd("%d ", array[i]);
 			}
 			emitsd("\"\n");
 		}else{

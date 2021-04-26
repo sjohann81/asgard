@@ -12,6 +12,15 @@ r6	- return address
 r7	- stack pointer
 */
 
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <asgard.h>
+#include <gen.h>
+
 /* some helper macros to emit text */
 #define emits(s) emit(s, strlen(s))
 #define emitf(fmt, ...) \
@@ -87,7 +96,8 @@ r7	- stack pointer
 #define GEN_JZ		"\tldi	at,            \n\tbez	r1,at\n"
 #define GEN_JZSZ	strlen(GEN_JZ)
 
-static void gen_start() {
+void gen_start()
+{
 	printf(".code\n");
 	emits("\tldi	at,main\n");
 	emits("\tldi	lr,___retmain\n");
@@ -113,14 +123,16 @@ static void gen_start() {
 	emits("\tbnz	r7,lr\n");
 }
 
-static void gen_finish() {
+void gen_finish()
+{
 	printf("%s\n", code);
 	printf(".data\n");
 	printf("%s\n", data);
 }
 
 /* put constant to primary register */
-static void gen_const(int n) {
+void gen_const(int n)
+{
 	if (n >= -128 && n <= 127) {
 			emitf("\tldr	r1,%d\n", n & 0xff);
 	} else {
@@ -142,26 +154,31 @@ static void gen_const(int n) {
 	}
 }
 
-static void gen_clear(){
+void gen_clear()
+{
 	emits("\txor	r1,r1,r1\n");
 }
 
-static void gen_complement(){
+void gen_complement()
+{
 	emits("\txor	r1,-1\n");
 }
 
-static void gen_push() {
+void gen_push()
+{
 	emits("\tsub	sp,4\n\tstw	r1,sp\n");
 	stack_pos = stack_pos + 1;
 }
 
 
-static void gen_poptop() {
+void gen_poptop()
+{
 	emits("\tldw	r2,sp\n\tadd	sp,4\n");
 	stack_pos = stack_pos - 1;
 }
 
-static void gen_pop(int n) {
+void gen_pop(int n)
+{
 	if (n > 0) {
 		if ((n * TYPE_NUM_SIZE < -128) || (n * TYPE_NUM_SIZE > 127)) {
 			gen_const(n * TYPE_NUM_SIZE);
@@ -173,12 +190,14 @@ static void gen_pop(int n) {
 	}
 }
 
-static void gen_stack_addr(int addr) {
+void gen_stack_addr(int addr)
+{
 	gen_const(addr * TYPE_NUM_SIZE);
 	emits("\tadd	r1,sp,r1\n");
 }
 
-static void gen_unref(int type) {
+void gen_unref(int type)
+{
 	if (type == TYPE_CHARVAR || type == TYPE_GCHARVAR) {
 		emits("\tldb	r1,r1\n");
 	}else{
@@ -187,7 +206,8 @@ static void gen_unref(int type) {
 }
 
 /* Call function by address stored in primary register */
-static void gen_call() {
+void gen_call()
+{
 	static int32_t i = 0;
 	char retbuf[50];
 
@@ -202,31 +222,36 @@ static void gen_call() {
 }
 
 /* return from function */
-static void gen_ret() {
+void gen_ret()
+{
 	emits("\tbnz	r7,lr\n");
 }
 
-static void gen_sym(struct symbol *sym) {
+void gen_sym(struct symbol *sym)
+{
 	if (sym->type == 'F') {
 		emits(sym->name);
 		emits("\n");
 	}
 }
 
-static void gen_loop_start() {
+void gen_loop_start()
+{
 	emitf("___%08x\n", codepos);
 }
 
-static void gen_sym_addr(struct symbol *sym) {
+void gen_sym_addr(struct symbol *sym) {
 	emitf("\tldi	r1,%s\n", sym->name);
 }
 
-static void gen_fixaddr(void){
+void gen_fixaddr(void)
+{
 	emits("\tlsl	r1,r1\n\tlsl	r1,r1\n");
 }
 
 /* patch jump address */
-static void gen_patch(char *op, int value) {
+void gen_patch(char *op, int value)
+{
 	char s[32];
 	sprintf(s, "___%08x", value);
 	if (value >= codepos) {
@@ -236,10 +261,11 @@ static void gen_patch(char *op, int value) {
 	memcpy(op-strlen(s)-13, s, strlen(s));
 }
 
-static void gen_array(int ts, int size) {
+void gen_array(int ts, int size)
+{
 	int p = 0;
 
-	while(((size * ts + p) % TYPE_NUM_SIZE) != 0) p++;
+	while (((size * ts + p) % TYPE_NUM_SIZE) != 0) p++;
 	if ((((size * ts) + p) < -128) || (((size * ts) + p) > 127)) {
 		gen_const((size * ts) + p);
 		emits("\tsub	sp,sp,r1\n");
@@ -253,25 +279,26 @@ static void gen_array(int ts, int size) {
 /* filled array or global array auxiliary functions */
 static int array_index = 0;
 
-static void gen_array_str(struct symbol *s, char *array, int size, char global, char empty) {
+void gen_array_str(struct symbol *s, char *array, int size, char global, char empty)
+{
 	int i;
 
-	if (global){
-		if (size > 1){
+	if (global) {
+		if (size > 1) {
 			emitfd("%s	___%s\n", s->name, s->name);
 			emitfd("___%s	\"", s->name);
-			if (empty){
+			if (empty) {
 				for (i = 0; i < size; i++)
 					emitsd(" ");
-			}else{
+			} else {
 				for (i = 0; i < size; i++)
 					emitfd("%c", array[i]);
 			}
 			emitsd("\"\n");
-		}else{
+		} else {
 			emitfd("%s	\" \"\n", s->name);
 		}
-	}else{
+	} else {
 		emitfd("___s%d	\"", array_index);
 		emitsd(array);
 		emitsd("\"\n");
@@ -282,29 +309,32 @@ static void gen_array_str(struct symbol *s, char *array, int size, char global, 
 
 static int array_index_n = 0;
 
-static void gen_array_int0(struct symbol *s, char global) {
-	if (global){
+void gen_array_int0(struct symbol *s, char global)
+{
+	if (global) {
 		emitfd("%s	", s->name);
-	}else{
+	} else {
 		emitfd("___n%d	", array_index_n);
 	}
 }
 
-static void gen_array_int1(struct symbol *s, char global) {
-	if (global){
+void gen_array_int1(struct symbol *s, char global)
+{
+	if (global) {
 		emitfd("%s	___%s\n", s->name, s->name);
 		emitfd("___%s	", s->name);
-	}else{
+	} else {
 		emitfd("___n%d	", array_index_n);
 	}
 }
 
-static void gen_array_int2(char empty) {
+void gen_array_int2(char empty)
+{
 	int val;
 
-	if (empty){
+	if (empty) {
 		emitsd("0 ");
-	}else{
+	} else {
 		if isalpha(tok[0]) {
 			emitfd("%s ", tok);
 		} else {
@@ -314,9 +344,10 @@ static void gen_array_int2(char empty) {
 	}
 }
 
-static void gen_array_int3(char global) {
+void gen_array_int3(char global)
+{
 	emitsd("\n");
-	if (!global){
+	if (!global) {
 		emitf("\tldi	r1,___n%d\n", array_index_n);
 		array_index_n++;
 	}

@@ -9,23 +9,57 @@ CFLAGS = -O2 -Wall -c -I ./src
 
 all:
 
-all: asgard-viking32 asgard-viking16 asgard-viking16-32 asgard-mars asgard-x86_linux
+all: asgard-mars asgard-mars-smd asgard-viking asgard-viking32 asgard-viking16-32 asgard-x86
 
-asgard-mars: asgard asgard-mars.o
-asgard-mars.o: src/frontend/asgard.c codegen/mars/gen.c
-	$(CC) $(CFLAGS) -c $< -DCODEGEN=\"../../codegen/mars/gen.c\" -o $@
+asgard-mars:
+	$(CC) $(CFLAGS) -I ./codegen/mars -o error.o src/error.c
+	$(CC) $(CFLAGS) -I ./codegen/mars -o lexer.o src/lexer.c
+	$(CC) $(CFLAGS) -I ./codegen/mars -o symbol.o src/symbol.c
+	$(CC) $(CFLAGS) -I ./codegen/mars -o parser.o src/parser.c
+	$(CC) $(CFLAGS) -I ./codegen/mars -o emit.o src/emit.c
+	$(CC) $(CFLAGS) -I ./codegen/mars -o gen.o codegen/mars/gen.c
+	$(CC) $(CFLAGS) -I ./codegen/mars -o asgard.o src/asgard.c
+	$(CC) error.o lexer.o symbol.o parser.o emit.o gen.o asgard.o -o asgard-mars
+	
+asgard-mars-smd:
+	$(CC) $(CFLAGS) -I ./codegen/mars_swmuldiv -o error.o src/error.c
+	$(CC) $(CFLAGS) -I ./codegen/mars_swmuldiv -o lexer.o src/lexer.c
+	$(CC) $(CFLAGS) -I ./codegen/mars_swmuldiv -o symbol.o src/symbol.c
+	$(CC) $(CFLAGS) -I ./codegen/mars_swmuldiv -o parser.o src/parser.c
+	$(CC) $(CFLAGS) -I ./codegen/mars_swmuldiv -o emit.o src/emit.c
+	$(CC) $(CFLAGS) -I ./codegen/mars_swmuldiv -o gen.o codegen/mars_swmuldiv/gen.c
+	$(CC) $(CFLAGS) -I ./codegen/mars_swmuldiv -o asgard.o src/asgard.c
+	$(CC) error.o lexer.o symbol.o parser.o emit.o gen.o asgard.o -o asgard-mars-smd
 
-asgard-viking32: asgard asgard-viking32.o
-asgard-viking32.o: src/frontend/asgard.c codegen/viking/gen32.c
-	$(CC) $(CFLAGS) -c $< -DCODEGEN=\"../../codegen/viking/gen32.c\" -o $@
+asgard-viking:
+	$(CC) $(CFLAGS) -I ./codegen/viking -o error.o src/error.c
+	$(CC) $(CFLAGS) -I ./codegen/viking -o lexer.o src/lexer.c
+	$(CC) $(CFLAGS) -I ./codegen/viking -o symbol.o src/symbol.c
+	$(CC) $(CFLAGS) -I ./codegen/viking -o parser.o src/parser.c
+	$(CC) $(CFLAGS) -I ./codegen/viking -o emit.o src/emit.c
+	$(CC) $(CFLAGS) -I ./codegen/viking -o gen.o codegen/viking/gen.c
+	$(CC) $(CFLAGS) -I ./codegen/viking -o asgard.o src/asgard.c
+	$(CC) error.o lexer.o symbol.o parser.o emit.o gen.o asgard.o -o asgard-viking
 
-asgard-viking16: asgard asgard-viking16.o
-asgard-viking16.o: src/frontend/asgard.c codegen/viking/gen16.c
-	$(CC) $(CFLAGS) -c $< -DCODEGEN=\"../../codegen/viking/gen16.c\" -o $@
+asgard-viking32:
+	$(CC) $(CFLAGS) -I ./codegen/viking32 -o error.o src/error.c
+	$(CC) $(CFLAGS) -I ./codegen/viking32 -o lexer.o src/lexer.c
+	$(CC) $(CFLAGS) -I ./codegen/viking32 -o symbol.o src/symbol.c
+	$(CC) $(CFLAGS) -I ./codegen/viking32 -o parser.o src/parser.c
+	$(CC) $(CFLAGS) -I ./codegen/viking32 -o emit.o src/emit.c
+	$(CC) $(CFLAGS) -I ./codegen/viking32 -o gen.o codegen/viking32/gen.c
+	$(CC) $(CFLAGS) -I ./codegen/viking32 -o asgard.o src/asgard.c
+	$(CC) error.o lexer.o symbol.o parser.o emit.o gen.o asgard.o -o asgard-viking32
 
-asgard-viking16-32: asgard asgard-viking16-32.o
-asgard-viking16-32.o: src/frontend/asgard.c codegen/viking/gen16-32.c
-	$(CC) $(CFLAGS) -c $< -DCODEGEN=\"../../codegen/viking/gen16-32.c\" -o $@
+asgard-viking16-32:
+	$(CC) $(CFLAGS) -I ./codegen/viking16-32 -o error.o src/error.c
+	$(CC) $(CFLAGS) -I ./codegen/viking16-32 -o lexer.o src/lexer.c
+	$(CC) $(CFLAGS) -I ./codegen/viking16-32 -o symbol.o src/symbol.c
+	$(CC) $(CFLAGS) -I ./codegen/viking16-32 -o parser.o src/parser.c
+	$(CC) $(CFLAGS) -I ./codegen/viking16-32 -o emit.o src/emit.c
+	$(CC) $(CFLAGS) -I ./codegen/viking16-32 -o gen.o codegen/viking16-32/gen.c
+	$(CC) $(CFLAGS) -I ./codegen/viking16-32 -o asgard.o src/asgard.c
+	$(CC) error.o lexer.o symbol.o parser.o emit.o gen.o asgard.o -o asgard-viking16-32
 
 asgard-x86:
 	$(CC) $(CFLAGS) -I ./codegen/x86_linux -o error.o src/error.c
@@ -46,7 +80,7 @@ app_x86:
 	$(SIZE) out.elf
 
 clean:
-	rm -f asgard-viking32 asgard-viking16 asgard-viking16-32 asgard-mars asgard-x86 out out.s *.txt *.lst
+	rm -f asgard-mars asgard-mars-smd asgard-viking asgard-viking32 asgard-viking16-32 asgard-x86 out out.s *.txt *.lst
 	rm -f *.o *~ *.elf *.bin src/*~ tests/*~
 
 .PHONY: all

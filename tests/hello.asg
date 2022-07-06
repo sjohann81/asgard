@@ -10,6 +10,7 @@ char str = "abcdef";
 func main() {
 	char vb = "abcde";
 	char buf[50];
+	char pbuf = &buf;
 	int a, b, c;
 	int d = {4, 5, 6, 7, 8};
 	int e = 2000;
@@ -28,8 +29,14 @@ func main() {
 	a = 7;
 	b = 3;
 	c = a / b;
+/*	itoa(12345, &buf, 10);
+	puts(&buf); putchar(0xa);
+	putchar(pbuf[2]); putchar(0xa);
+*/
+
 	itoa(12345, buf, 10);
 	puts(buf); putchar(0xa);
+	putchar(buf[2]); putchar(0xa);
 
 	a = v[0];
 	test(a, v); putchar(0xa);

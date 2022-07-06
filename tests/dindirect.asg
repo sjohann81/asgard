@@ -14,7 +14,7 @@ func main(){
 	int list1[4];
 	int list2[4];
 	int lists[3];
-	int i = 0, j = 0, ptr;
+	int i = 0, j = 0, ptr, sz_int;
 	char p;
 	
 	list1[0] = str1;
@@ -40,6 +40,7 @@ func main(){
 		i = i + 1;
 	}
 
+	sz_int = &i - &j;	/* task the addresses of two int vars, the difference is sizeof(int) */
 	ptr = lists;
 	while (*ptr){
 		j = 0;
@@ -47,6 +48,6 @@ func main(){
 			puts((*ptr)[j]);
 			j = j + 1;
 		}
-		ptr = ptr + 2;
+		ptr = ptr + sz_int;
 	}
 }

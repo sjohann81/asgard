@@ -50,7 +50,7 @@ func test4(int a, int b, int c){
 	printn(c); putchar(0xa); putchar(0xa);
 	printhex(0x7fff, 4); puts(" ");
 
-	while (p[i]){			/* the list of parameters is NULL terminated */
+	while (p[i]){			/* the list of parameters is NULL terminated - NOT ANYMORE!*/
 		printhex(p[i], 4); puts(" ");
 		i = i + 1;
 	}
@@ -68,7 +68,8 @@ func main(){
 	test2(i, 1);
 	test2(123, 456, 789, 987, 654, 321, 6);
 	test3("hello\n", "hola\n", 2);
-	test4(555, 123, 456, 789, 987, 654, 321);
+/*	test4(555, 123, 456, 789, 987, 654, 321);
 	test4(99,88,77,66,55,44,33,22,11);
 	test4(99);
+	*/
 }

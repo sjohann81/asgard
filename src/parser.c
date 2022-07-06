@@ -163,8 +163,8 @@ int postfix_expr()
 		gen_push(); /* store function address */
 		int call_addr = stack_pos - 1;
 		oper = 1;
-		gen_const(0);	/* push a NULL to the parameters list */
-		gen_push();
+//		gen_const(0);	/* push a NULL to the parameters list */
+//		gen_push();
 		if (accept(")") == 0) {
 			do {
 				type = expr();
@@ -388,7 +388,7 @@ int expr()
 
 void statement(int blabel, int clabel)
 {
-	int t, s, i;
+	int t, s, i; // a = 0;
 
 	if (accept("{")) {
 		int prev_stack_pos = stack_pos;
@@ -475,6 +475,7 @@ void statement(int blabel, int clabel)
 			readtok();
 			if (accept("[")) {
 				if (!accept("]")) {
+					//a = 1;
 					s = atoi(tok);
 					if (t == TYPE_INTVAR)
 						gen_array(TYPE_NUM_SIZE, s);
@@ -490,8 +491,10 @@ void statement(int blabel, int clabel)
 //					gen_clear();
 				}
 			}
-			gen_push();
-			var->addr = stack_pos-1;
+//			if (!a) {		// don't push array address to the stack
+				gen_push();
+				var->addr = stack_pos-1;
+//			}
 		} while (accept(","));
 		expect(";");
 	} else if (accept("if")) {

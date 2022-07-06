@@ -76,3 +76,8 @@ void compile();
 
 void emit(void *buf, size_t len);
 void emitd(void *buf, size_t len);
+void emits(void *s);
+void emitf(char *fmt, ...);
+void emitsd(void *s);
+void emitfd(char *fmt, ...);
+

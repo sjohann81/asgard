@@ -41,7 +41,9 @@ void gen_start()
 	emits("lw	$a0, 0($sp)\n");
 	emits("lw	$v0, 4($sp)\n");
 	emits("addiu	$sp, $sp, 8\n");
-	emits("jr	$ra\n");	
+	emits("jr	$ra\n");
+
+	emits("getchar:\n");
 }
 
 void gen_finish()
@@ -157,7 +159,7 @@ void gen_array(int ts, int size)
 	int p = 0;
 	
 	while(((size * ts + p) % TYPE_NUM_SIZE) != 0) p++;
-	emitf("addiu	$sp, $sp, -%d\n", (size * ts) + p);
+	emitf("addiu	$sp, $sp, -%d		# GEN_ARRAY\n", (size * ts) + p);
 	stack_pos = stack_pos + ((size * ts) + p) / TYPE_NUM_SIZE;
 	gen_stack_addr(0);
 }
@@ -180,7 +182,7 @@ void gen_array_str(struct symbol *s, char *array, int size, char global, char em
 				for (i = 0; i < size; i++)
 					emitfd("%d ", array[i]);
 			}
-			emitsd("\"\n");
+			emitsd("\n");
 		} else {
 			emitfd("%s:	.word 0", s->name);
 		}

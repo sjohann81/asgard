@@ -42,6 +42,8 @@ void gen_start()
 	emits("lw	$v0, 4($sp)\n");
 	emits("addiu	$sp, $sp, 8\n");
 	emits("jr	$ra\n");
+	
+	emits("getchar:\n");
 }
 
 void gen_finish()

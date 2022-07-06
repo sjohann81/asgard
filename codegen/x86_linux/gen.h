@@ -19,6 +19,7 @@ http://tldp.org/HOWTO/html_single/Assembly-HOWTO/
 */
 
 /* some helper macros to emit text */
+/*
 #define emits(s) emit(s, strlen(s))
 #define emitf(fmt, ...) \
 	do { \
@@ -33,7 +34,7 @@ http://tldp.org/HOWTO/html_single/Assembly-HOWTO/
 		snprintf(buf, sizeof(buf)-1, fmt, __VA_ARGS__); \
 		emitsd(buf); \
 	} while (0)
-
+*/
 #define TYPE_NUM_SIZE	4
 
 #define GEN_ADD		"add    %ebx, %eax\n"

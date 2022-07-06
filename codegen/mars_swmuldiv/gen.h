@@ -13,22 +13,6 @@ $sp	- stack pointer
 $ra	- return address
 */
 
-/* some helper macros to emit text */
-#define emits(s) emit(s, strlen(s))
-#define emitf(fmt, ...) \
-	do { \
-		char buf[128]; \
-		snprintf(buf, sizeof(buf)-1, fmt, __VA_ARGS__); \
-		emits(buf); \
-	} while (0)
-#define emitsd(s) emitd(s, strlen(s))
-#define emitfd(fmt, ...) \
-	do { \
-		char buf[128]; \
-		snprintf(buf, sizeof(buf)-1, fmt, __VA_ARGS__); \
-		emitsd(buf); \
-	} while (0)
-
 #define TYPE_NUM_SIZE	4
 #define SW_MULDIV
 

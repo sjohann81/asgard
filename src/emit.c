@@ -34,3 +34,40 @@ void emitd(void *buf, size_t len)
 	memcpy(data + datapos, buf, len);
 	datapos += len;
 }
+
+
+void emits(void *s)
+{
+	emit(s, strlen(s));
+}
+
+void emitf(char *fmt, ...)
+{
+	va_list args;
+	char buf[1024];
+
+	memset(buf, 0, sizeof(buf));
+	va_start(args, fmt);
+	vsprintf(buf, fmt, args);
+	va_end(args);
+	emits(buf);
+}
+
+
+void emitsd(void *s)
+{
+	emitd(s, strlen(s));
+}
+
+void emitfd(char *fmt, ...)
+{
+	va_list args;
+	char buf[1024];
+
+	memset(buf, 0, sizeof(buf));
+	va_start(args, fmt);
+	vsprintf(buf, fmt, args);
+	va_end(args);
+	emitsd(buf);
+}
+

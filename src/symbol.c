@@ -20,7 +20,7 @@ struct symbol *sym_declare(char *name, char type, int addr)
 {
 	if (sym_find(name))
 		error("error: redeclaration of symbol %s on context %s\n", name, context);
-	strncpy(sym[sympos].name, name, MAXTOKSZ);
+	strncpy(sym[sympos].name, name, MAXTOKSZ - 2);
 	strncpy(sym[sympos].context, context, MAXTOKSZ);
 	sym[sympos].addr = addr;
 	sym[sympos].size = 0;

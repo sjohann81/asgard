@@ -1,0 +1,10 @@
+func main(){
+	/* parameters are pushed to the stack, and will be evaluated in the reverse order */
+	/* push the number of parameters as the last param (not including the last param!) */
+
+	print("hello world!\n", 1);
+	print("number: %d\n", 12345, 2);
+	print("string: %s\n", "hello", 2);
+	print("hello world! %s %s %d\n", "hola", "que", 123, 4);
+	print("hex: %x %2x %4x\n", 0xa, 0xa, 0xeac, 4);
+}

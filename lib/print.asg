@@ -1,0 +1,52 @@
+func print(){
+	int p[0];			/* we have the address of "p". this will give us access to the */
+					/* parameters through the stack. it has to be the first item on auto data. */
+					/* this is the same as int p = &p + sizeof(int) */
+	int i = p[1] + 1;		/* variable "i" will hold the number of parameters */
+	char format = p[i];		/* address of the first parameter (it is a formatted string) */
+	char str;
+	int num, width;
+
+	while (*format != 0) {
+		if (*format == '%') {
+			format = format + 1;
+			width = 0;
+			if (*format == 0) break;
+			if (*format == '%') putchar('%');
+			while (*format == '0') format = format + 1;
+			while (*format >= '0' & *format <= '9') {
+				width = width * 10;
+				width = width + (*format - '0');
+				format = format + 1;
+			}
+			if (*format == 's') {
+				i = i - 1;
+				str = p[i];
+				puts(str);
+			}
+			else if (*format == 'd') {
+				i = i - 1;
+				num = p[i];
+				printn(num);
+			}
+			else if (*format == 'x') {
+				i = i - 1;
+				num = p[i];
+				if (width > 0) {
+					printhex(num, width);
+				} else {
+					printh(num);
+				}
+			}
+			else if (*format == 'c') {
+				i = i - 1;
+				num = p[i];
+				printh(num);
+			}
+		} else {
+			putchar(*format);
+		}
+				
+		format = format + 1;
+	}
+}
